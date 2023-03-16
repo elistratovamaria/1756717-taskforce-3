@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Мария Елистратова](https://up.htmlacademy.ru/nodejs-2/3/user/1756717).
-* Наставник: `Неизвестно`.
+* Наставник: [Михаил Кислый](https://htmlacademy.ru/profile/smart-grizzly).
 
 ---
 
