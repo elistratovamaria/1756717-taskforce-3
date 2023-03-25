@@ -1,5 +1,5 @@
 import { User, UserRole, City } from '@project/shared/shared-types';
-import { genSalt, hash } from 'bcrypt';
+import { compare, genSalt, hash } from 'bcrypt';
 import { SALT_ROUNDS } from './platform-user.constant';
 
 export class PlatformUserEntity implements User {
@@ -35,5 +35,9 @@ export class PlatformUserEntity implements User {
     const salt = await genSalt(SALT_ROUNDS);
     this.passwordHash = await hash(password, salt);
     return this;
+  }
+
+  public async comparePassword(password: string): Promise<boolean> {
+    return compare(password, this.passwordHash);
   }
 }
