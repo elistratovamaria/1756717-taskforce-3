@@ -1,4 +1,6 @@
 import { User, UserRole, City } from '@project/shared/shared-types';
+import { genSalt, hash } from 'bcrypt';
+import { SALT_ROUNDS } from './platform-user.constant';
 
 export class PlatformUserEntity implements User {
   public _id: string;
@@ -27,5 +29,11 @@ export class PlatformUserEntity implements User {
     this.role = platformUser.role;
     this.avatar = platformUser.avatar;
     this.dateBirth = platformUser.dateBirth;
+  }
+
+  public async setPassword(password: string): Promise<PlatformUserEntity> {
+    const salt = await genSalt(SALT_ROUNDS);
+    this.passwordHash = await hash(password, salt);
+    return this;
   }
 }
