@@ -8,7 +8,7 @@ import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { CustomerRdo } from './rdo/customer.rdo';
 import { ExecutorRdo } from './rdo/executor.rdo';
 import { UserRole } from '@project/shared/shared-types';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -17,18 +17,27 @@ export class AuthenticationController {
     private readonly authService: AuthenticationService
   ) {}
 
+  @ApiResponse({
+    type: UserRdo,
+  })
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.register(dto);
     return fillObject(UserRdo, newUser);
   }
 
+  @ApiResponse({
+    type: LoggedUserRdo,
+  })
   @Post('login')
   public async login(@Body() dto: LoginUserDto) {
     const verifiedUser = await this.authService.verifyUser(dto);
     return fillObject(LoggedUserRdo, verifiedUser);
   }
 
+  @ApiResponse({
+    type: ExecutorRdo,
+  })
   @Get(':id')
   public async show(@Param('id') id: string) {
     const existUser = await this.authService.getUser(id);
