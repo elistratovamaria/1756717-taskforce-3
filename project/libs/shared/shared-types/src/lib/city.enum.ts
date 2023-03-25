@@ -1,5 +1,5 @@
 export enum City {
-  Moscow = 'Moscow',
-  SaintPetersburg = 'SaintPetersburg',
-  Vladivostok = 'Vladivostok',
+  Moscow = 'Москва',
+  SaintPetersburg = 'Санкт-Петербург',
+  Vladivostok = 'Владивосток',
 }
