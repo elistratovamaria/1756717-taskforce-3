@@ -8,7 +8,9 @@ import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { CustomerRdo } from './rdo/customer.rdo';
 import { ExecutorRdo } from './rdo/executor.rdo';
 import { UserRole } from '@project/shared/shared-types';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('authentication')
 @Controller('auth')
 export class AuthenticationController {
   constructor (
