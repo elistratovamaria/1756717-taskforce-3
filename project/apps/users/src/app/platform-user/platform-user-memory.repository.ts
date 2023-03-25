@@ -1,7 +1,9 @@
 import { CRUDRepository } from '@project/util/util-types';
 import { PlatformUserEntity } from './platform-user.entity';
 import { User } from '@project/shared/shared-types';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class PlatformUserMemoryRepository implements CRUDRepository<PlatformUserEntity, string, User> {
   private repository: {[key: string]: User} = {};
 
