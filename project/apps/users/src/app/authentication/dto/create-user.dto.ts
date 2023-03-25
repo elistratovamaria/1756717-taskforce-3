@@ -6,6 +6,5 @@ export class CreateUserDto {
   public city: City;
   public password: string;
   public role: UserRole;
-  public avatar?: string;
   public dateBirth: Date;
 }
