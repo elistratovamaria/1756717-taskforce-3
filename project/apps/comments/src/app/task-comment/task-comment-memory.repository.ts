@@ -2,6 +2,7 @@ import { CRUDRepository } from '@project/util/util-types';
 import { TaskCommentEntity } from './task-comment.entity';
 import { Comment } from '@project/shared/shared-types';
 import { Injectable } from '@nestjs/common';
+import crypto from 'node:crypto';
 
 @Injectable()
 export class TaskCommentMemoryRepository implements CRUDRepository<TaskCommentEntity, string, Comment> {
