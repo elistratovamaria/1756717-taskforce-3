@@ -17,6 +17,10 @@ export class TaskCommentController {
     status: HttpStatus.CREATED,
     description: 'The comment has been successfully created'
   })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have enough rights to add a comment'
+  })
   @Post()
   public async create(@Body() dto: CreateCommentDto) {
     const newComment = await this.commentService.createComment(dto);
