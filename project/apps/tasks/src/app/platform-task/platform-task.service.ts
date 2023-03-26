@@ -12,11 +12,13 @@ export class PlatformTaskService {
   public async createTask(dto: CreateTaskDto) {
     const platformTask = dto;
 
-    const taskEntity = await new PlatformTaskEntity(platformTask);
+    const taskEntity = new PlatformTaskEntity(platformTask);
 
     return this.platformTaskRepository
       .create(taskEntity);
   }
 
-
+  public async getTask(id: string) {
+    return this.platformTaskRepository.findById(id);
+  }
 }
