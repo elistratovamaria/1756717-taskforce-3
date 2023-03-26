@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { TaskCommentModule } from './task-comment/task-comment.module';
 
 @Module({
-  imports: [],
+  imports: [TaskCommentModule],
   controllers: [],
   providers: [],
 })
