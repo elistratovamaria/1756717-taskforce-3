@@ -1,4 +1,4 @@
-import { City, Task } from '@project/shared/shared-types';
+import { City, StatusTask, Task } from '@project/shared/shared-types';
 
 export class PlatformTaskEntity implements Task {
   public _id: string;
@@ -11,6 +11,7 @@ export class PlatformTaskEntity implements Task {
   public address?: string;
   public tags?: string[];
   public city: City;
+  public status: StatusTask;
 
   constructor(platformTask: Task) {
     this.fillEntity(platformTask);
@@ -31,5 +32,6 @@ export class PlatformTaskEntity implements Task {
     this.address = platformTask.address;
     this.tags = platformTask.tags;
     this.city = platformTask.city;
+    this.status = platformTask.status;
   }
 }

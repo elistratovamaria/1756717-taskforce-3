@@ -1,4 +1,5 @@
 import { City } from './city.enum';
+import { StatusTask } from './status-task.enum';
 
 export interface Task {
   _id?: string;
@@ -11,4 +12,5 @@ export interface Task {
   address?: string;
   tags?: string[];
   city: City;
+  status?: StatusTask;
 }
