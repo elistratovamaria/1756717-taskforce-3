@@ -1,8 +1,10 @@
 import { CRUDRepository } from '@project/util/util-types';
 import { PlatformTaskEntity } from './platform-task.entity';
 import { Task } from '@project/shared/shared-types';
+import { Injectable } from '@nestjs/common';
 import crypto from 'node:crypto';
 
+@Injectable()
 export class PlatformTaskMemoryRepository implements CRUDRepository<PlatformTaskEntity, string, Task> {
   private repository: {[key: string]: Task} = {};
 
