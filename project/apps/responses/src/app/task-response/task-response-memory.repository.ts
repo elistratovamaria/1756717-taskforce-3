@@ -1,8 +1,10 @@
 import { CRUDRepository } from '@project/util/util-types';
 import { TaskResponseEntity } from './task-response.entity';
 import { Response } from '@project/shared/shared-types';
+import { Injectable } from '@nestjs/common';
 import crypto from 'node:crypto';
 
+@Injectable()
 export class TaskResponseMemoryRepository implements CRUDRepository<TaskResponseEntity, string, Response> {
   private repository: {[key: string]: Response} = {};
 
