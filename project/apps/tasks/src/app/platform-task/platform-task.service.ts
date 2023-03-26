@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { StatusTask } from '@project/shared/shared-types';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { PlatformTaskMemoryRepository } from './platform-task-memory.repository';
 import { PlatformTaskEntity } from './platform-task.entity';
@@ -10,9 +11,12 @@ export class PlatformTaskService {
   ) {}
 
   public async createTask(dto: CreateTaskDto) {
-    const platformTask = dto;
+    const task = {
+      ...dto,
+      status: StatusTask.New,
+    }
 
-    const taskEntity = new PlatformTaskEntity(platformTask);
+    const taskEntity = new PlatformTaskEntity(task);
 
     return this.platformTaskRepository
       .create(taskEntity);

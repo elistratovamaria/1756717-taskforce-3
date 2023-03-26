@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PlatformTaskMemoryRepository } from './platform-task-memory.repository.js';
+import { PlatformTaskMemoryRepository } from './platform-task-memory.repository';
 import { PlatformTaskController } from './platform-task.controller';
 import { PlatformTaskService } from './platform-task.service';
 
