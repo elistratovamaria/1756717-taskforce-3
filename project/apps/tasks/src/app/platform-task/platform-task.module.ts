@@ -5,7 +5,6 @@ import { PlatformTaskService } from './platform-task.service';
 
 @Module({
   controllers: [PlatformTaskController],
-  providers: [PlatformTaskService, PlatformTaskMemoryRepository],
-  exports: [PlatformTaskMemoryRepository]
+  providers: [PlatformTaskService, PlatformTaskMemoryRepository]
 })
 export class PlatformTaskModule {}
