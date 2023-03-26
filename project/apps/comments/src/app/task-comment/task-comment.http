@@ -10,6 +10,6 @@ Content-Type: application/json
 ###
 
 # Delete comment by ID
-DELETE http://localhost:3333/api/auth/7aef6925-4fe5-4057-b5cc-cc7cf214df05 HTTP/1.1
+DELETE http://localhost:3333/api/comments/7a03a193-6826-436b-94f9-51eedf189d02 HTTP/1.1
 
 ###
