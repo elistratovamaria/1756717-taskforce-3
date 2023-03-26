@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { TaskResponseModule } from './task-response/task-response.module';
 
 @Module({
-  imports: [],
+  imports: [TaskResponseModule],
   controllers: [],
   providers: [],
 })
