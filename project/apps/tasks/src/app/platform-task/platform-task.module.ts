@@ -1,4 +1,9 @@
 import { Module } from '@nestjs/common';
+import { PlatformTaskController } from './platform-task.controller';
+import { PlatformTaskService } from './platform-task.service';
 
-@Module({})
+@Module({
+  controllers: [PlatformTaskController],
+  providers: [PlatformTaskService],
+})
 export class PlatformTaskModule {}
