@@ -28,6 +28,10 @@ export class TaskCommentController {
     description: 'The comment has been successfully deleted'
   })
   @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Comment with this ID does not exist'
+  })
+  @ApiResponse({
     status: HttpStatus.FORBIDDEN,
     description: 'The user does not have enough rights to delete the comment'
   })

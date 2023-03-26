@@ -25,4 +25,8 @@ export class PlatformTaskService {
   public async getTask(id: string) {
     return this.platformTaskRepository.findById(id);
   }
+
+  public async deleteTask(id: string) {
+    this.platformTaskRepository.destroy(id);
+  }
 }
