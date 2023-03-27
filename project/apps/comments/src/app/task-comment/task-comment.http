@@ -1,0 +1,15 @@
+# Create a new comment
+POST http://localhost:3333/api/comments HTTP/1.1
+Content-Type: application/json
+
+{
+  "message": "Легкое задание",
+  "taskId": "234"
+}
+
+###
+
+# Delete comment by ID
+DELETE http://localhost:3333/api/comments/7a03a193-6826-436b-94f9-51eedf189d02 HTTP/1.1
+
+###

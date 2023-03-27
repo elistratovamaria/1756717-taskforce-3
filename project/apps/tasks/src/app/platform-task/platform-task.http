@@ -1,0 +1,22 @@
+#Create a new task
+POST http://localhost:3333/api/tasks HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Клининг помещения",
+  "description": "Провести клининг офисного помещения",
+  "category": "Клининг",
+  "city": "Москва"
+}
+
+###
+
+# Get task by ID
+GET http://localhost:3333/api/tasks/8ff1eefc-b332-44ed-801d-39738a041e9f HTTP/1.1
+
+###
+
+# Delete task by ID
+DELETE http://localhost:3333/api/tasks/8ff1eefc-b332-44ed-801d-39738a041e9f HTTP/1.1
+
+###

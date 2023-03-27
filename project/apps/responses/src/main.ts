@@ -13,8 +13,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('The Users service')
-    .setDescription("users service API")
+    .setTitle('The Responses service')
+    .setDescription('Responses service API')
     .setVersion('1.0')
     .build();
 
