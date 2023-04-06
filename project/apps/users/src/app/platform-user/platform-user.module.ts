@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
-import { PlatformUserMemoryRepository } from './platform-user-memory.repository';
+import { MongooseModule } from '@nestjs/mongoose';
+import { PlatformUserModel, PlatformUserSchema } from './platform-user.model';
+import { PlatformUserRepository } from './platform-user.repository';
 
 @Module({
-  providers: [PlatformUserMemoryRepository],
-  exports: [PlatformUserMemoryRepository],
+  imports: [MongooseModule.forFeature([
+    { name: PlatformUserModel.name, schema: PlatformUserSchema}
+  ])],
+  providers: [PlatformUserRepository],
+  exports: [PlatformUserRepository],
 })
 export class PlatformUserModule {}
