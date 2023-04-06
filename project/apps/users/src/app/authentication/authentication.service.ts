@@ -12,13 +12,14 @@ export class AuthenticationService {
     private readonly platformUserRepository: PlatformUserRepository
   ) {}
 
+  /** Регистрация пользователя */
   public async register(dto: CreateUserDto) {
     const {name, email, city, password, role, dateBirth} = dto;
 
     const platformUser = {
       name, email, city, role,
       avatar: '', dateBirth: dayjs(dateBirth).toDate(),
-      passwordHash: ''
+      passwordHash: '', info: '', speciality: []
     };
 
     const existUser = await this.platformUserRepository
@@ -35,6 +36,7 @@ export class AuthenticationService {
       .create(userEntity);
   }
 
+  /** Авторизация пользователя */
   public async verifyUser(dto: LoginUserDto) {
     const {email, password} = dto;
     const existUser = await this.platformUserRepository.findByEmail(email);

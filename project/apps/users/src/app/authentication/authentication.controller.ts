@@ -14,6 +14,7 @@ export class AuthenticationController {
     private readonly authService: AuthenticationService
   ) {}
 
+  /** Создание нового пользователя */
   @ApiResponse({
     type: UserRdo,
     status: HttpStatus.CREATED,
@@ -29,6 +30,7 @@ export class AuthenticationController {
     return fillObject(UserRdo, newUser);
   }
 
+  /** Авторизация пользователя */
   @ApiResponse({
     type: LoggedUserRdo,
     status: HttpStatus.OK,

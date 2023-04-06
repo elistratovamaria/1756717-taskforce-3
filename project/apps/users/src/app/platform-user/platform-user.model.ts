@@ -45,6 +45,16 @@ export class PlatformUserModel extends Document implements User {
     required: true,
   })
   dateBirth: Date;
+
+  @Prop({
+    default: '',
+  })
+  info: string;
+
+  @Prop({
+    default: [],
+  })
+  speciality: string[];
 }
 
 export const PlatformUserSchema = SchemaFactory.createForClass(PlatformUserModel);

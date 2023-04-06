@@ -11,6 +11,8 @@ export class PlatformUserEntity implements User {
   public role: UserRole;
   public avatar?: string;
   public dateBirth: Date;
+  public info?: string;
+  public speciality?: string[];
 
   constructor(platformUser: User) {
     this.fillEntity(platformUser);
@@ -29,6 +31,8 @@ export class PlatformUserEntity implements User {
     this.role = platformUser.role;
     this.avatar = platformUser.avatar;
     this.dateBirth = platformUser.dateBirth;
+    this.info = platformUser.info;
+    this.speciality = platformUser.speciality;
   }
 
   public async setPassword(password: string): Promise<PlatformUserEntity> {

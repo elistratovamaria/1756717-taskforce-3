@@ -1,4 +1,20 @@
 # Get user by ID
-GET http://localhost:3000/api/users/642e8ca7faaeb15e78796ebd HTTP/1.1
+GET http://localhost:3000/api/users/642eb5c4859b4c3ee7ea7b50 HTTP/1.1
+
+###
+
+# Update user by ID
+PATCH http://localhost:3000/api/users/642eb5c4859b4c3ee7ea7b50 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Mary",
+  "city": "Владивосток",
+  "info": "Супер классный специалист!",
+  "speciality": [
+    "HTML",
+    "CSS"
+  ]
+}
 
 ###

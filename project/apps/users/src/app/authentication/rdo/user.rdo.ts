@@ -50,4 +50,16 @@ export class UserRdo {
   })
   @Expose()
   public dateBirth: string;
+
+  @ApiProperty({
+    description: 'User info',
+    example: 'Lorem ipsum dolor sit amet'
+  })
+  public info: string;
+
+  @ApiProperty({
+    description: 'User speciality',
+    example: 'WebDev, PHP, Laravel'
+  })
+  public speciality: string[];
 }

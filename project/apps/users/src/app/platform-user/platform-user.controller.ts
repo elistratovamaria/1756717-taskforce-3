@@ -1,8 +1,9 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Patch, HttpStatus, Param } from '@nestjs/common';
 import { PlatformUserService } from './platform-user.service';
 import { fillObject } from '@project/util/util-core';
 import { CustomerRdo } from './rdo/customer.rdo';
 import { ExecutorRdo } from './rdo/executor.rdo';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRole } from '@project/shared/shared-types';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
@@ -13,6 +14,7 @@ export class PlatformUserController {
     private readonly platformUserService: PlatformUserService
   ) {}
 
+  /** Получение информации о пользователе */
   @ApiResponse({
     type: ExecutorRdo,
     status: HttpStatus.OK,
@@ -32,4 +34,17 @@ export class PlatformUserController {
     const existUser = await this.platformUserService.getUser(id);
     return existUser.role === UserRole.Customer ? fillObject(CustomerRdo, existUser) : fillObject(ExecutorRdo, existUser);
   }
+
+  /** Изменение информации о пользователе */
+  @ApiResponse({
+    type: ExecutorRdo,
+    status: HttpStatus.OK,
+    description: 'User update'
+  })
+  @Patch(':id')
+  public async update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+    const user = await this.platformUserService.update(id, dto);
+    return fillObject(ExecutorRdo, user);
+  }
+
 }
