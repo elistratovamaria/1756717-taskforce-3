@@ -1,13 +1,10 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { fillObject } from '@project/util/util-core';
 import { UserRdo } from './rdo/user.rdo';
 import { LoginUserDto } from './dto/login-user.dto';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
-import { CustomerRdo } from './rdo/customer.rdo';
-import { ExecutorRdo } from './rdo/executor.rdo';
-import { UserRole } from '@project/shared/shared-types';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('authentication')
@@ -17,6 +14,7 @@ export class AuthenticationController {
     private readonly authService: AuthenticationService
   ) {}
 
+  /** Создание нового пользователя */
   @ApiResponse({
     type: UserRdo,
     status: HttpStatus.CREATED,
@@ -32,6 +30,7 @@ export class AuthenticationController {
     return fillObject(UserRdo, newUser);
   }
 
+  /** Авторизация пользователя */
   @ApiResponse({
     type: LoggedUserRdo,
     status: HttpStatus.OK,
@@ -50,25 +49,5 @@ export class AuthenticationController {
   public async login(@Body() dto: LoginUserDto) {
     const verifiedUser = await this.authService.verifyUser(dto);
     return fillObject(LoggedUserRdo, verifiedUser);
-  }
-
-  @ApiResponse({
-    type: ExecutorRdo,
-    status: HttpStatus.OK,
-    description: 'User found'
-  })
-  @ApiResponse({
-    type: CustomerRdo,
-    status: HttpStatus.OK,
-    description: 'User found'
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'The user with this id does not exist'
-  })
-  @Get(':id')
-  public async show(@Param('id') id: string) {
-    const existUser = await this.authService.getUser(id);
-    return existUser.role === UserRole.Customer ? fillObject(CustomerRdo, existUser) : fillObject(ExecutorRdo, existUser);
   }
 }
