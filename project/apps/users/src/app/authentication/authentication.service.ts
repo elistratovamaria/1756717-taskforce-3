@@ -1,5 +1,5 @@
 import { Injectable, ConflictException, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { PlatformUserMemoryRepository } from '../platform-user/platform-user-memory.repository';
+import { PlatformUserRepository } from '../platform-user/platform-user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import dayjs from 'dayjs';
@@ -9,7 +9,7 @@ import { PlatformUserEntity } from '../platform-user/platform-user.entity';
 @Injectable()
 export class AuthenticationService {
   constructor(
-    private readonly platformUserRepository: PlatformUserMemoryRepository
+    private readonly platformUserRepository: PlatformUserRepository
   ) {}
 
   public async register(dto: CreateUserDto) {

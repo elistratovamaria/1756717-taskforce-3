@@ -18,12 +18,14 @@ export class PlatformUserRepository implements CRUDRepository<PlatformUserEntity
   }
 
   public async destroy(id: string): Promise<void> {
-    this.platformUserModel.deleteOne({id});
+    this.platformUserModel.
+      deleteOne({_id: id})
+      .exec();
   }
 
   public async findById(id: string): Promise<User | null> {
     return this.platformUserModel
-      .findOne({id})
+      .findOne({_id: id})
       .exec();
   }
 
