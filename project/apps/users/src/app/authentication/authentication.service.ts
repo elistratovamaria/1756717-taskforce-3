@@ -50,8 +50,4 @@ export class AuthenticationService {
 
     return platformUserEntity.toObject();
   }
-
-  public async getUser(id: string) {
-    return this.platformUserRepository.findById(id);
-  }
 }
