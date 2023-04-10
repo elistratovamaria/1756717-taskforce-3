@@ -36,7 +36,7 @@ model Task {
 
 model Category {
   categoryId Int    @id @default(autoincrement()) @map("category_id")
-  title      String
+  title      String @unique
   tasks      Task[]
 
   @@map("categories")
