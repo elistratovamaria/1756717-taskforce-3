@@ -6,17 +6,17 @@ Content-Type: application/json
   "title": "Клининг помещения",
   "description": "Провести клининг офисного помещения",
   "category": "Клининг",
-  "city": "Москва"
+  "city": "Moscow"
 }
 
 ###
 
 # Get task by ID
-GET http://localhost:3333/api/tasks/8ff1eefc-b332-44ed-801d-39738a041e9f HTTP/1.1
+GET http://localhost:3333/api/tasks/1 HTTP/1.1
 
 ###
 
 # Delete task by ID
-DELETE http://localhost:3333/api/tasks/8ff1eefc-b332-44ed-801d-39738a041e9f HTTP/1.1
+DELETE http://localhost:3333/api/tasks/1 HTTP/1.1
 
 ###

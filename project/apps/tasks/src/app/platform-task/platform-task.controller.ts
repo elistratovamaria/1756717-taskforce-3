@@ -36,9 +36,10 @@ export class PlatformTaskController {
     status: HttpStatus.NOT_FOUND,
     description: 'Task with this ID does not exist'
   })
-  @Get(':id')
+  @Get('/:id')
   public async show(@Param('id') id: string) {
-    const existTask = await this.taskService.getTask(id);
+    const taskId = parseInt(id, 10);
+    const existTask = await this.taskService.getTask(taskId);
     return fillObject(TaskRdo, existTask);
   }
 
@@ -54,8 +55,9 @@ export class PlatformTaskController {
     status: HttpStatus.FORBIDDEN,
     description: 'The user does not have enough rights to delete the task'
   })
-  @Delete(':id')
+  @Delete('/:id')
   public async delete(@Param('id') id: string) {
-    this.taskService.deleteTask(id);
+    const taskId = parseInt(id, 10);
+    this.taskService.deleteTask(taskId);
   }
 }

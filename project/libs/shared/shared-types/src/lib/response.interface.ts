@@ -1,5 +1,5 @@
 export interface Response {
-  id?: string;
+  id?: number;
   message: string;
   taskId: string;
   estimation: number;
