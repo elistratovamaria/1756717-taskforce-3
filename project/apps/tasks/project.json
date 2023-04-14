@@ -58,6 +58,41 @@
           "codeCoverage": true
         }
       }
+    },
+    "db:lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma validate --schema ./schema.prisma",
+        "cwd": "libs/models/models-tasks/src/prisma"
+      }
+    },
+    "db:migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma migrate dev --schema ./schema.prisma --skip-generate --skip-seed",
+        "cwd": "libs/models/models-tasks/src/prisma"
+      }
+    },
+    "db:reset": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma migrate reset --schema ./schema.prisma --force --skip-generate --skip-seed",
+        "cwd": "libs/models/models-tasks/src/prisma"
+      }
+    },
+    "db:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma generate --schema ./schema.prisma",
+        "cwd": "libs/models/models-tasks/src/prisma"
+      }
+    },
+    "db:seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node seed.ts",
+        "cwd": "libs/models/models-tasks/src/prisma"
+      }
     }
   },
   "tags": []

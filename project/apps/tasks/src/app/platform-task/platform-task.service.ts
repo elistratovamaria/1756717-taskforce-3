@@ -1,32 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { StatusTask } from '@project/shared/shared-types';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { PlatformTaskMemoryRepository } from './platform-task-memory.repository';
+import { Task } from '@project/shared/shared-types';
+import { PlatformTaskRepository } from './platform-task.repository';
+import { TaskCategoryRepository } from '../task-category/task-category.repository';
 import { PlatformTaskEntity } from './platform-task.entity';
 
 @Injectable()
 export class PlatformTaskService {
   constructor(
-    private readonly platformTaskRepository: PlatformTaskMemoryRepository
+    private readonly platformTaskRepository: PlatformTaskRepository,
+    private readonly taskCategoryRepository: TaskCategoryRepository
   ) {}
 
-  public async createTask(dto: CreateTaskDto) {
+  public async createTask(dto: CreateTaskDto): Promise<Task> {
     const task = {
       ...dto,
+      price: dto.price ?? 0,
+      deadline: dto.deadline ?? null,
+      image: dto.image ?? '',
+      address: dto.address ?? '',
+      tags: dto.tags ?? [],
       status: StatusTask.New,
-    }
+      userId: ''
+    };
+    const record = new PlatformTaskEntity(task);
 
-    const taskEntity = new PlatformTaskEntity(task);
-
-    return this.platformTaskRepository
-      .create(taskEntity);
+    return this.platformTaskRepository.create(record);
   }
 
-  public async getTask(id: string) {
-    return this.platformTaskRepository.findById(id);
+  public async getTask(id: number): Promise<Task> {
+    return await this.platformTaskRepository.findById(id);
   }
 
-  public async deleteTask(id: string) {
-    this.platformTaskRepository.destroy(id);
+  public async deleteTask(id: number): Promise<void> {
+    await this.platformTaskRepository.destroy(id);
   }
 }

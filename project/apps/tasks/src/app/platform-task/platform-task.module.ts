@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
-import { PlatformTaskMemoryRepository } from './platform-task-memory.repository';
+import { PlatformTaskRepository } from './platform-task.repository';
 import { PlatformTaskController } from './platform-task.controller';
 import { PlatformTaskService } from './platform-task.service';
+import { TaskCategoryModule } from '../task-category/task-category.module';
 
 @Module({
+  imports: [TaskCategoryModule],
   controllers: [PlatformTaskController],
-  providers: [PlatformTaskService, PlatformTaskMemoryRepository]
+  providers: [PlatformTaskService, PlatformTaskRepository]
 })
 export class PlatformTaskModule {}

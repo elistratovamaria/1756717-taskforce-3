@@ -28,7 +28,7 @@ export class PlatformTaskMemoryRepository implements CRUDRepository<PlatformTask
   }
 
   public async update(id: string, item: PlatformTaskEntity): Promise<Task> {
-    this.repository[id] = {...item.toObject(), _id: id};
+    this.repository[id] = {...item.toObject(), id: +id};
     return this.findById(id);
   }
 }

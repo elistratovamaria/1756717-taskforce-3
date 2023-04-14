@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  taskId         Int        @id @default(autoincrement()) @map("task_id")
+  title          String     @default("")
+  description    String     @default("")
+  category       Category   @relation(fields: [categoryId], references: [categoryId])
+  categoryId     Int        @map("category_id")
+  price          Int?
+  deadline       DateTime?
+  image          String?    @default("")
+  address        String?    @default("")
+  tags           String[]
+  city           City
+  status         StatusTask
+  comments       Comment[]
+  response       Response?
+  //myTask         MyTask?    @relation(fields: [myTaskId], references: [myTaskId])
+  //myTaskId       Int?       @map("my_task_id")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  publishAt      DateTime   @updatedAt @map("publish_at")
+  userId         String?    @map("user_id")
+
+  @@map("tasks")
+}
+
+model Category {
+  categoryId Int    @id @default(autoincrement()) @map("category_id")
+  title      String
+  tasks      Task[]
+
+  @@map("categories")
+}
+
+model Comment {
+  commentId Int      @id @default(autoincrement()) @map("comment_id")
+  message   String   @default("")
+  userId    String   @map("user_id")
+  task      Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade, onUpdate: Cascade)
+  taskId    Int      @map("task_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("comments")
+}
+
+model Response {
+  responseId Int      @id @default(autoincrement()) @map("response_id")
+  message    String   @default("")
+  userId     String   @map("user_id")
+  task       Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade, onUpdate: Cascade)
+  taskId     Int      @unique @map("task_id")
+  estimation Int
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("responses")
+}
+
+//model MyTask {
+  //myTaskId  Int      @id @default(autoincrement()) @map("my_task_id")
+  //task      Task[]
+  //taskId    Int      @map("task_id")
+  //userId    String   @map("user_id")
+  //createdAt DateTime @default(now()) @map("created_at")
+  //updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  //@@map("myTasks")
+//}
+
+enum City {
+  Moscow
+  SaintPetersburg
+  Vladivostok
+}
+
+enum StatusTask {
+  New
+  Cancelled
+  InProgress
+  Done
+  Failed
+}
