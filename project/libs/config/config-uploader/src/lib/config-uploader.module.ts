@@ -16,4 +16,4 @@ const ENV_FILE_PATH = 'apps/uploader/.uploader.env';
   providers: [],
   exports: [],
 })
-export class ConfigConfigUploaderModule {}
+export class ConfigUploaderModule {}
