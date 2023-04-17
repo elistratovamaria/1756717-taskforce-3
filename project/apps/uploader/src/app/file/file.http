@@ -3,10 +3,16 @@ POST http://localhost:3333/api/files/upload HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="file"; filename="file.http"
+Content-Disposition: form-data; name="file"; filename="1.png"
+Content-Type: image/png
 
-< ./file.http
+< ./markup/img/avatars/1.png
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+# Get file by ID
+GET http://localhost:3333/api/files/643d8da04b086dc11c07b724 HTTP/1.1
 
 ###
