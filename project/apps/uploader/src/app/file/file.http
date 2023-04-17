@@ -13,6 +13,6 @@ Content-Type: image/png
 ###
 
 # Get file by ID
-GET http://localhost:3333/api/files/643d8da04b086dc11c07b724 HTTP/1.1
+GET http://localhost:3333/api/files/643d9208077c8512f3feeff6 HTTP/1.1
 
 ###
