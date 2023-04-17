@@ -1,3 +1,5 @@
+import { Express } from 'express';
+import 'multer';
 import { uploaderConfig } from '@project/config/config-uploader';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
