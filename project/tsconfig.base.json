@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@project/config/config-uploader": [
+        "libs/config/config-uploader/src/index.ts"
+      ],
       "@project/config/config-users": ["libs/config/config-users/src/index.ts"],
       "@project/models/models-tasks": ["libs/models/models-tasks/src/index.ts"],
       "@project/shared/shared-types": ["libs/shared/shared-types/src/index.ts"],
