@@ -1,7 +1,7 @@
 import { City } from '@project/shared/shared-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { ArrayMaxSize, ArrayUnique, IsString, Length, IsEnum, IsISO8601, Min, IsOptional, MaxLength } from 'class-validator';
-import { PlatformUser } from '../platform-user.constant';
+import { PlatformUserValidationMessage } from '../platform-user.constant';
 
 export class UpdateUserDto {
   @ApiProperty({
@@ -10,7 +10,7 @@ export class UpdateUserDto {
   })
   @IsOptional()
   @IsString()
-  @Length(3, 50, { message: PlatformUser.NameNotValid })
+  @Length(3, 50, { message: PlatformUserValidationMessage.NameNotValid })
   public name: string;
 
   @ApiProperty({
@@ -19,7 +19,7 @@ export class UpdateUserDto {
     type: () => typeof City.Moscow
   })
   @IsOptional()
-  @IsEnum(City, { message: PlatformUser.CityNotValid })
+  @IsEnum(City, { message: PlatformUserValidationMessage.CityNotValid })
   public city: City;
 
   @ApiProperty({
@@ -27,8 +27,8 @@ export class UpdateUserDto {
     example: '1980-01-01'
   })
   @IsOptional()
-  @IsISO8601({}, { message: PlatformUser.DateBirthNotValid })
-  @Min(18, { message: PlatformUser.DateBirthMinor })
+  @IsISO8601({}, { message: PlatformUserValidationMessage.DateBirthNotValid })
+  @Min(18, { message: PlatformUserValidationMessage.DateBirthMinor })
   public dateBirth: Date;
 
   @ApiProperty({
@@ -36,7 +36,7 @@ export class UpdateUserDto {
     example: 'Lorem ipsum dolor sit amet'
   })
   @IsOptional()
-  @MaxLength(300, {message: PlatformUser.InfoNotValid})
+  @MaxLength(300, {message: PlatformUserValidationMessage.InfoNotValid})
   public info: string;
 
   @ApiProperty({
@@ -44,7 +44,7 @@ export class UpdateUserDto {
     example: 'Webdev, PHP, Laravel'
   })
   @IsOptional()
-  @ArrayMaxSize(5, {message: PlatformUser.SpecialityLength})
-  @ArrayUnique({}, {message: PlatformUser.SpecialityUnique})
+  @ArrayMaxSize(5, {message: PlatformUserValidationMessage.SpecialityLength})
+  @ArrayUnique({}, {message: PlatformUserValidationMessage.SpecialityUnique})
   public speciality: string[];
 }

@@ -2,6 +2,9 @@ export const enum AuthUser {
   Exists = 'User with this email exists',
   NotFound = 'User not found',
   PasswordWrong = 'User password is wrong',
+}
+
+export const enum AuthUserValidationMessage {
   NameNotValid = 'User name should have from 3 to 50 symbols',
   EmailNotValid = 'The email is not valid',
   CityNotValid = 'The city can be only Moscow, SaintPetersburg or Vladivostok',

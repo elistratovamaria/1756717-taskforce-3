@@ -1,6 +1,6 @@
 export const SALT_ROUNDS = 10;
 
-export const enum PlatformUser {
+export const enum PlatformUserValidationMessage {
   NameNotValid = 'User name should have from 3 to 50 symbols',
   CityNotValid = 'The city can be only Moscow, SaintPetersburg or Vladivostok',
   PasswordNotValid = 'The password should be from 6 to 12 symbols',
