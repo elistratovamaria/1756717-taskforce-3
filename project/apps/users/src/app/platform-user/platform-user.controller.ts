@@ -6,6 +6,7 @@ import { ExecutorRdo } from './rdo/executor.rdo';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRole } from '@project/shared/shared-types';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 
 @ApiTags('users')
 @Controller('users')
@@ -30,7 +31,7 @@ export class PlatformUserController {
     description: 'The user with this id does not exist'
   })
   @Get(':id')
-  public async show(@Param('id') id: string) {
+  public async show(@Param('id', MongoidValidationPipe) id: string) {
     const existUser = await this.platformUserService.getUser(id);
     return existUser.role === UserRole.Customer ? fillObject(CustomerRdo, existUser) : fillObject(ExecutorRdo, existUser);
   }
@@ -42,7 +43,7 @@ export class PlatformUserController {
     description: 'User update'
   })
   @Patch(':id')
-  public async update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+  public async update(@Param('id', MongoidValidationPipe) id: string, @Body() dto: UpdateUserDto) {
     const user = await this.platformUserService.update(id, dto);
     return fillObject(ExecutorRdo, user);
   }
