@@ -5,6 +5,7 @@ import { Task } from '@project/shared/shared-types';
 import { PlatformTaskRepository } from './platform-task.repository';
 import { TaskCategoryRepository } from '../task-category/task-category.repository';
 import { PlatformTaskEntity } from './platform-task.entity';
+import { TaskQuery } from './query/task.query';
 
 @Injectable()
 export class PlatformTaskService {
@@ -35,5 +36,9 @@ export class PlatformTaskService {
 
   public async deleteTask(id: number): Promise<void> {
     await this.platformTaskRepository.destroy(id);
+  }
+
+  async getTasks(query: TaskQuery): Promise<Task[]> {
+    return this.platformTaskRepository.find(query);
   }
 }

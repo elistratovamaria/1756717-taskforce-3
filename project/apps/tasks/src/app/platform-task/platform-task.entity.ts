@@ -1,10 +1,10 @@
-import { City, StatusTask, Task, Comment, /*Response*/ } from '@project/shared/shared-types';
+import { City, StatusTask, Category, Task, Comment, /*Response*/ } from '@project/shared/shared-types';
 
 export class PlatformTaskEntity implements Task {
   public id: number;
   public title: string;
   public description: string;
-  public category: string;
+  public category: Category;
   public price?: number;
   public deadline?: Date;
   public image?: string;
@@ -23,7 +23,7 @@ export class PlatformTaskEntity implements Task {
   public toObject(): PlatformTaskEntity {
     return {
       ...this,
-      comments: this.comments.map(({ id }) => ({ id }))
+      comments: [...this.comments],
     };
   }
 

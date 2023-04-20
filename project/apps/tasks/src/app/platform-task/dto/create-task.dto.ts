@@ -1,4 +1,4 @@
-import { City } from '@project/shared/shared-types';
+import { City, Category } from '@project/shared/shared-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { PlatformTaskValidationMessage } from '../platform-task.constant';
 import { IsISO8601, IsString, Min, Length, ArrayMaxSize, IsEnum, IsOptional, MinDate, Matches} from 'class-validator';
@@ -26,7 +26,7 @@ export class CreateTaskDto {
     example: 'Клининг'
   })
   @IsString()
-  public category: string;
+  public category: Category;
 
   @ApiProperty({
     description: 'Task price',

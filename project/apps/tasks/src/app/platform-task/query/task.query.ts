@@ -1,4 +1,4 @@
-import { City } from '@project/shared/shared-types';
+import { City, Category } from '@project/shared/shared-types';
 import { IsNumber, IsOptional, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { DEFAULT_SORT_DIRECTION, DEFAULT_TASK_COUNT_LIMIT } from '../platform-task.constant';
@@ -9,8 +9,9 @@ export class TaskQuery {
   @IsOptional()
   public limit = DEFAULT_TASK_COUNT_LIMIT;
 
+  @Transform(({ value } ) => value.categoryId)
   @IsOptional()
-  public category: string;
+  public category: Category;
 
   @IsOptional()
   public tag: string;

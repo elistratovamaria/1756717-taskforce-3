@@ -1,9 +1,10 @@
-import { Body, Controller, Post, Get, Param, HttpStatus, Delete} from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, HttpStatus, Delete, Query} from '@nestjs/common';
 import { PlatformTaskService } from './platform-task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { fillObject } from '@project/util/util-core';
 import { TaskRdo } from './rdo/task.rdo';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { TaskQuery } from './query/task.query';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -57,5 +58,17 @@ export class PlatformTaskController {
   @Delete('/:id')
   public async delete(@Param('id') id: number) {
     this.taskService.deleteTask(id);
+  }
+
+
+  @ApiResponse({
+    type: TaskRdo,
+    status: HttpStatus.OK,
+    description: 'Tasks found'
+  })
+  @Get('/')
+  async index(@Query() query: TaskQuery) {
+    const tasks = await this.taskService.getTasks(query);
+    return fillObject(TaskRdo, tasks);
   }
 }
