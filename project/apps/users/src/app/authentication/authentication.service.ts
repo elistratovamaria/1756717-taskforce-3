@@ -5,11 +5,14 @@ import { LoginUserDto } from './dto/login-user.dto';
 import dayjs from 'dayjs';
 import { AuthUser } from './authentication.constant';
 import { PlatformUserEntity } from '../platform-user/platform-user.entity';
+import { TokenPayload, User } from '@project/shared/shared-types';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
-    private readonly platformUserRepository: PlatformUserRepository
+    private readonly platformUserRepository: PlatformUserRepository,
+    private readonly jwtService: JwtService,
   ) {}
 
   /** Регистрация пользователя */
@@ -51,5 +54,18 @@ export class AuthenticationService {
     }
 
     return platformUserEntity.toObject();
+  }
+
+  public async createUserToken(user: User) {
+    const payload: TokenPayload = {
+      sub: user._id,
+      email: user.email,
+      role: user.role,
+      name: user.name,
+    };
+
+    return {
+      accessToken: await this.jwtService.signAsync(payload),
+    }
   }
 }
