@@ -9,3 +9,6 @@ export const enum PlatformTaskValidationMessage {
   TagsAmountNotValid = 'The amount of tags should be less or equal 5',
   TagsLengthNotValid = 'Tag length should be from 3 to 10 symbols',
 }
+
+export const DEFAULT_TASK_COUNT_LIMIT = 25;
+export const DEFAULT_SORT_DIRECTION = 'desc';
