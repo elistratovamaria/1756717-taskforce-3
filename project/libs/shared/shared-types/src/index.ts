@@ -7,3 +7,4 @@ export * from './lib/comment.interface'
 export * from './lib/response.interface';
 export * from './lib/category.interface';
 export * from './lib/file.interface';
+export * from './lib/token-payload.interface';
