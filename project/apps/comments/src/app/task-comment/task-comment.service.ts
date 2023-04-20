@@ -16,11 +16,11 @@ export class TaskCommentService {
       .create(commentEntity);
   }
 
-  public async getComment(id: string) {
+  public async getComment(id: number) {
     return this.taskCommentRepository.findById(id);
   }
 
-  public async deleteComment(id: string) {
+  public async deleteComment(id: number) {
     this.taskCommentRepository.destroy(id);
   }
 }

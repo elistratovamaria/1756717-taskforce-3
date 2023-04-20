@@ -1,5 +1,5 @@
 import { TaskCategoryService } from './task-category.service';
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { fillObject } from '@project/util/util-core';
 import { CategoryRdo } from './rdo/category.rdo';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -12,9 +12,8 @@ export class TaskCategoryController {
   ) {}
 
   @Get('/:id')
-  async show(@Param('id') id: string) {
-    const categoryId = parseInt(id, 10);
-    const existCategory = await this.taskCategoryService.getCategory(categoryId);
+  async show(@Param('id', ParseIntPipe) id: number) {
+    const existCategory = await this.taskCategoryService.getCategory(id);
     return fillObject(CategoryRdo, existCategory);
   }
 
@@ -32,15 +31,13 @@ export class TaskCategoryController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async destroy(@Param('id') id: string) {
-    const categoryId = parseInt(id, 10);
-    this.taskCategoryService.deleteCategory(categoryId);
+  async destroy(@Param('id', ParseIntPipe) id: number) {
+    this.taskCategoryService.deleteCategory(id);
   }
 
   @Patch('/:id')
-  async update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
-    const categoryId = parseInt(id, 10);
-    const updatedCategory = await this.taskCategoryService.updateCategory(categoryId, dto)
+  async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCategoryDto) {
+    const updatedCategory = await this.taskCategoryService.updateCategory(id, dto)
     return fillObject(CategoryRdo, updatedCategory);
   }
 }
