@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { fillObject } from '@project/util/util-core';
@@ -6,6 +6,12 @@ import { UserRdo } from './rdo/user.rdo';
 import { LoginUserDto } from './dto/login-user.dto';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { ExecutorRdo } from '../platform-user/rdo/executor.rdo';
+import { CustomerRdo } from '../platform-user/rdo/customer.rdo';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { MongoidValidationPipe } from '@project/shared/shared-pipes';
+import { UserRole } from '@project/shared/shared-types';
+import { UpdateUserDto } from '../platform-user/dto/update-user.dto';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -50,5 +56,39 @@ export class AuthenticationController {
     const verifiedUser = await this.authService.verifyUser(dto);
     const loggedUser = await this.authService.createUserToken(verifiedUser);
     return fillObject(LoggedUserRdo, Object.assign(verifiedUser, loggedUser));
+  }
+
+  /** Получение информации о пользователе */
+  @ApiResponse({
+    type: ExecutorRdo,
+    status: HttpStatus.OK,
+    description: 'User found'
+  })
+  @ApiResponse({
+    type: CustomerRdo,
+    status: HttpStatus.OK,
+    description: 'User found'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'The user with this id does not exist'
+  })
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  public async show(@Param('id', MongoidValidationPipe) id: string) {
+    const existUser = await this.authService.getUser(id);
+    return existUser.role === UserRole.Customer ? fillObject(CustomerRdo, existUser) : fillObject(ExecutorRdo, existUser);
+  }
+
+  /** Изменение информации о пользователе */
+  @ApiResponse({
+    type: ExecutorRdo,
+    status: HttpStatus.OK,
+    description: 'User update'
+  })
+  @Patch(':id')
+  public async update(@Param('id', MongoidValidationPipe) id: string, @Body() dto: UpdateUserDto) {
+    const user = await this.authService.update(id, dto);
+    return fillObject(ExecutorRdo, user);
   }
 }
