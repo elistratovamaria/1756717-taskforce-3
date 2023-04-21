@@ -3,30 +3,29 @@ import { CRUDRepository } from '@project/util/util-types';
 import { PlatformTaskEntity } from './platform-task.entity';
 import { Task } from '@project/shared/shared-types';
 import { PrismaService } from '../prisma/prisma.service';
+import { TaskQuery } from './query/task.query';
 
 @Injectable()
 export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity, number, Task> {
   constructor(private readonly prisma: PrismaService) {}
 
   public async create(item: PlatformTaskEntity): Promise<Task> {
-    const {category, ...rest} = item;
-    const record = await this.prisma.task.create({
+    const entityData = item.toObject();
+    return await this.prisma.task.create({
       data: {
-        ...rest,
-        category: {
-          create: {
-            title: category,
-          },
-        },
+        ...entityData,
         comments: {
-          connect: []
+          create: []
+        },
+        category: {
+          create: entityData.category,
         },
       },
+      include: {
+        comments: true,
+        category: true,
+      }
     });
-    return {
-      ...record,
-      category,
-    };
   }
 
   public async destroy(taskId: number): Promise<void> {
@@ -38,56 +37,63 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
   }
 
   public async findById(taskId: number): Promise<Task | null> {
-    const record = await this.prisma.task.findUnique({
+    return this.prisma.task.findFirst({
       where: {
-        taskId: taskId,
+        taskId
       },
       include: {
-        category: {
-          select: {
-            title: true,
-          },
-        },
-      },
+        comments: true,
+        category: true,
+      }
     });
-    return {
-      ...record,
-      category: record?.category?.title,
-    };
   }
 
-  public async find(): Promise<Task[]> {
-    const records = await this.prisma.task.findMany({
-      include: {
+  public async find({limit, category, tag, city, sortDirection, page}: TaskQuery): Promise<Task[]> {
+    return await this.prisma.task.findMany({
+      where: {
         category: {
-          select: {
-            title: true,
-          },
+          is: {
+            categoryId: category.categoryId,
         },
       },
+        tags: {
+          has: tag,
+        },
+        city: {
+          equals: city,
+        }
+      },
+      take: limit,
+      include: {
+        comments: true,
+        category: true,
+      },
+      orderBy: [
+        { createdAt: sortDirection }
+      ],
+      skip: page > 0 ? limit * (page - 1) : undefined,
     });
-    return records.map((item) => ({
-      ...item,
-      category: item?.category?.title,
-    }));
   }
 
   public async update(taskId: number, item: PlatformTaskEntity): Promise<Task> {
-    const { category, ...rest } = item;
-    const record = await this.prisma.task.update({
+    const entityData = item.toObject();
+    return await this.prisma.task.update({
       where: {
         taskId: taskId,
       },
       data: {
-        ...rest,
+        ...entityData,
         comments: {
           connect: []
         },
+        category: {
+          create: entityData.category,
+        },
       },
+      include: {
+        comments: true,
+        category: true,
+      }
     });
-    return {
-      ...record,
-      category,
-    };
   }
 }

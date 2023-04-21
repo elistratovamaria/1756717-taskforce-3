@@ -15,7 +15,8 @@ async function fillDb() {
             description: 'Сверстать лендинг для продажи автомасел',
             userId: '13',
             price: 1000,
-            city: 'Москва',
+            city: 'Moscow',
+            status: 'New',
             response: {
               create: {
                 message: 'Выполнено отлично!',
@@ -23,6 +24,7 @@ async function fillDb() {
                 estimation: 5
               }
             },
+            tags: ['WebDev'],
             comments: {
               create: [
                 {
@@ -47,7 +49,8 @@ async function fillDb() {
             title: 'Починить телефон',
             description: 'Что-то случилось с экраном телефона',
             userId: '14',
-            city: 'Владивосток',
+            city: 'Vladivostok',
+            status: 'New',
             response: {
               create: {
                 message: 'Очень быстро починили телефон',
@@ -55,6 +58,7 @@ async function fillDb() {
                 estimation: 5
               }
             },
+            tags: ['Technics'],
             comments: {
               create: [
                 {

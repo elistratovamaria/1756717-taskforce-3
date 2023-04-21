@@ -3,20 +3,28 @@ POST http://localhost:3333/api/tasks HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "Клининг помещения",
-  "description": "Провести клининг офисного помещения",
+  "title": "Клининг большого помещения",
+  "description": "Провести клининг офисного помещения, сделать чисто-чисто, очень чисто, чисто-чисто, очень чисто, чисто-чисто, очень чисто",
   "category": "Клининг",
-  "city": "Moscow"
+  "city": "Moscow",
+  "tags": [
+    "WebDev"
+  ]
 }
 
 ###
 
 # Get task by ID
-GET http://localhost:3333/api/tasks/1 HTTP/1.1
+GET http://localhost:3333/api/tasks/2 HTTP/1.1
 
 ###
 
 # Delete task by ID
 DELETE http://localhost:3333/api/tasks/1 HTTP/1.1
+
+###
+
+# Get all tasks and filtres
+GET http://localhost:3333/api/tasks?sortDirection=desc&category=1&limit=2&page=1 HTTP/1.1
 
 ###

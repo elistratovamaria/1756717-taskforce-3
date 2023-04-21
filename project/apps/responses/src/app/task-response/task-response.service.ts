@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TaskResponseMemoryRepository } from './task-response-memory.repository';
-import { CreateResponseDto } from '../dto/create-response.dto';
+import { CreateResponseDto } from './dto/create-response.dto';
 import { TaskResponseEntity } from './task-response.entity';
 
 @Injectable()

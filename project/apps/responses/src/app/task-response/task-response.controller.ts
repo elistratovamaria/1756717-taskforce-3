@@ -1,8 +1,8 @@
 import { Controller, Body, Post, HttpStatus } from '@nestjs/common';
 import { TaskResponseService } from './task-response.service';
-import { CreateResponseDto } from '../dto/create-response.dto';
+import { CreateResponseDto } from './dto/create-response.dto';
 import { fillObject } from '@project/util/util-core';
-import { ResponseRdo } from '../rdo/response.rdo';
+import { ResponseRdo } from './rdo/response.rdo';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('responses')

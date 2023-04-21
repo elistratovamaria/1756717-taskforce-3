@@ -1,4 +1,4 @@
-import { Controller, Body, Post, Delete, Param, HttpStatus } from '@nestjs/common';
+import { Controller, Body, Post, Delete, Param, ParseIntPipe, HttpStatus } from '@nestjs/common';
 import { TaskCommentService } from './task-comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { fillObject } from '@project/util/util-core';
@@ -40,7 +40,7 @@ export class TaskCommentController {
     description: 'The user does not have enough rights to delete the comment'
   })
   @Delete(':id')
-  public async delete(@Param('id') id: string) {
+  public async delete(@Param('id', ParseIntPipe) id: number) {
     this.commentService.deleteComment(id);
   }
 }

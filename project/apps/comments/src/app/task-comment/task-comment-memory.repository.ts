@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import crypto from 'node:crypto';
 
 @Injectable()
-export class TaskCommentMemoryRepository implements CRUDRepository<TaskCommentEntity, string, Comment> {
+export class TaskCommentMemoryRepository implements CRUDRepository<TaskCommentEntity, number, Comment> {
   private repository: {[key: string]: Comment} = {};
 
   public async create(item: TaskCommentEntity): Promise<Comment> {
@@ -15,7 +15,7 @@ export class TaskCommentMemoryRepository implements CRUDRepository<TaskCommentEn
     return {...entry};
   }
 
-  public async findById(id: string): Promise<Comment> {
+  public async findById(id: number): Promise<Comment> {
     if (this.repository[id]) {
       return {...this.repository[id]};
     }
@@ -23,12 +23,12 @@ export class TaskCommentMemoryRepository implements CRUDRepository<TaskCommentEn
     return null;
   }
 
-  public async destroy(id: string): Promise<void> {
+  public async destroy(id: number): Promise<void> {
     delete this.repository[id];
   }
 
-  public async update(id: string, item: TaskCommentEntity): Promise<Comment> {
-    this.repository[id] = {...item.toObject(), _id: id};
+  public async update(id: number, item: TaskCommentEntity): Promise<Comment> {
+    this.repository[id] = {...item.toObject(), id: id};
     return this.findById(id);
   }
 }

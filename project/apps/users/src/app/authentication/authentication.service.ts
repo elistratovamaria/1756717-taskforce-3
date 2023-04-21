@@ -5,11 +5,15 @@ import { LoginUserDto } from './dto/login-user.dto';
 import dayjs from 'dayjs';
 import { AuthUser } from './authentication.constant';
 import { PlatformUserEntity } from '../platform-user/platform-user.entity';
+import { TokenPayload, User } from '@project/shared/shared-types';
+import { JwtService } from '@nestjs/jwt';
+import { UpdateUserDto } from '../platform-user/dto/update-user.dto';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
-    private readonly platformUserRepository: PlatformUserRepository
+    private readonly platformUserRepository: PlatformUserRepository,
+    private readonly jwtService: JwtService,
   ) {}
 
   /** Регистрация пользователя */
@@ -51,5 +55,34 @@ export class AuthenticationService {
     }
 
     return platformUserEntity.toObject();
+  }
+
+  /** Получение данных о пользователе */
+  public async getUser(id: string) {
+    return this.platformUserRepository.findById(id);
+  }
+
+  /** Изменение информации о пользователе */
+  public async update(id: string, dto: UpdateUserDto) {
+    const user = await this.platformUserRepository.findById(id);
+    if (!user) {
+      throw new NotFoundException(AuthUser.NotFound);
+    }
+
+    const userEntity = new PlatformUserEntity({ ...user, ...dto });
+    return this.platformUserRepository.update(id, userEntity);
+  }
+
+  public async createUserToken(user: User) {
+    const payload: TokenPayload = {
+      sub: user._id,
+      email: user.email,
+      role: user.role,
+      name: user.name,
+    };
+
+    return {
+      accessToken: await this.jwtService.signAsync(payload),
+    }
   }
 }
