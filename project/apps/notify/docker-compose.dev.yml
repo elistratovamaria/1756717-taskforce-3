@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   taskforce.notify.fakesmtp:
-    image: gessnerfl/fake-smtp-server
+    image: gessnerfl/fake-smtp-server:2.0.0
     container_name: "taskforce.notify.fakesmtp"
     hostname: "fakesmtp"
     ports:
