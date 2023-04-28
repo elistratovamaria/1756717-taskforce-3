@@ -12,13 +12,15 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 import { UserRole } from '@project/shared/shared-types';
 import { UpdateUserDto } from '../platform-user/dto/update-user.dto';
+import { NotifyService } from '../notify/notify.service';
 
 @ApiTags('authentication')
 @Controller('auth')
 export class AuthenticationController {
-  constructor (
-    private readonly authService: AuthenticationService
-  ) {}
+  constructor(
+    private readonly authService: AuthenticationService,
+    private readonly notifyService: NotifyService,
+  ) { }
 
   /** Создание нового пользователя */
   @ApiResponse({
@@ -33,6 +35,8 @@ export class AuthenticationController {
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.register(dto);
+    const { email, name } = newUser;
+    await this.notifyService.registerSubscriber({ email, name });
     return fillObject(UserRdo, newUser);
   }
 

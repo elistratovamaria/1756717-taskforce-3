@@ -1,7 +1,7 @@
 import { UserRole, City } from '@project/shared/shared-types';
 import { AuthUserValidationMessage } from '../authentication.constant';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsISO8601, IsString, Min, Length, IsEmail, IsEnum } from 'class-validator';
+import { IsISO8601, IsString, Length, IsEmail, IsEnum } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -48,6 +48,5 @@ export class CreateUserDto {
     example: '1980-01-01'
   })
   @IsISO8601({}, { message: AuthUserValidationMessage.DateBirthNotValid })
-  @Min(18, { message: AuthUserValidationMessage.DateBirthMinor })
   public dateBirth: Date;
 }
