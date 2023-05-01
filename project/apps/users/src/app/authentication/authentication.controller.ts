@@ -1,9 +1,8 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { fillObject } from '@project/util/util-core';
 import { UserRdo } from './rdo/user.rdo';
-import { LoginUserDto } from './dto/login-user.dto';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { ExecutorRdo } from '../platform-user/rdo/executor.rdo';
@@ -13,6 +12,8 @@ import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 import { UserRole } from '@project/shared/shared-types';
 import { UpdateUserDto } from '../platform-user/dto/update-user.dto';
 import { NotifyService } from '../notify/notify.service';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { RequestWithUser } from '@project/shared/shared-types';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -41,6 +42,7 @@ export class AuthenticationController {
   }
 
   /** Авторизация пользователя */
+  @UseGuards(LocalAuthGuard)
   @ApiResponse({
     type: LoggedUserRdo,
     status: HttpStatus.OK,
@@ -56,10 +58,8 @@ export class AuthenticationController {
   })
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  public async login(@Body() dto: LoginUserDto) {
-    const verifiedUser = await this.authService.verifyUser(dto);
-    const loggedUser = await this.authService.createUserToken(verifiedUser);
-    return fillObject(LoggedUserRdo, Object.assign(verifiedUser, loggedUser));
+  public async login(@Req() { user }: RequestWithUser) {
+    return this.authService.createUserToken(user);
   }
 
   /** Получение информации о пользователе */
