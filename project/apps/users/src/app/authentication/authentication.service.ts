@@ -1,19 +1,23 @@
-import { Injectable, ConflictException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, ConflictException, Inject, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PlatformUserRepository } from '../platform-user/platform-user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { UpdateUserDto } from '../platform-user/dto/update-user.dto';
+import { ConfigService, ConfigType } from '@nestjs/config';
 import dayjs from 'dayjs';
 import { AuthUser } from './authentication.constant';
 import { PlatformUserEntity } from '../platform-user/platform-user.entity';
 import { TokenPayload, User } from '@project/shared/shared-types';
 import { JwtService } from '@nestjs/jwt';
-import { UpdateUserDto } from '../platform-user/dto/update-user.dto';
+import { jwtConfig } from '@project/config/config-users';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private readonly platformUserRepository: PlatformUserRepository,
+    private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    @Inject (jwtConfig.KEY) private readonly jwtOptions: ConfigType<typeof jwtConfig>,
   ) {}
 
   /** Регистрация пользователя */
@@ -83,6 +87,10 @@ export class AuthenticationService {
 
     return {
       accessToken: await this.jwtService.signAsync(payload),
+      refreshToken: await this.jwtService.signAsync(payload, {
+        secret: this.jwtOptions.refreshTokenSecret,
+        expiresIn: this.jwtOptions.refreshTokenExpiresIn
+      })
     }
   }
 }
