@@ -1,5 +1,6 @@
 export const enum AuthUser {
   Exists = 'User with this email exists',
+  IsAuthorized = 'User is authorized',
   NotFound = 'User not found',
   PasswordWrong = 'User password is wrong',
 }
