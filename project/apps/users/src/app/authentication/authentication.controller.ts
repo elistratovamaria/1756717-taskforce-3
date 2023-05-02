@@ -15,6 +15,7 @@ import { NotifyService } from '../notify/notify.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RequestWithUser } from '@project/shared/shared-types';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -91,10 +92,38 @@ export class AuthenticationController {
     status: HttpStatus.OK,
     description: 'User update'
   })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'The user with this id does not exist',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User is unauthorized',
+  })
   @Patch(':id')
   public async update(@Param('id', MongoidValidationPipe) id: string, @Body() dto: UpdateUserDto) {
     const user = await this.authService.update(id, dto);
     return fillObject(ExecutorRdo, user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Password has been changed successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'The user with this id does not exist',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User is unauthorized',
+  })
+  public async changePassword(@Param('id', MongoidValidationPipe) id: string, @Body() dto: ChangePasswordDto) {
+    await this.authService.changePassword(dto, id);
+    return {};
   }
 
   @UseGuards(JwtRefreshGuard)

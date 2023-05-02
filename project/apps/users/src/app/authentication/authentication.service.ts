@@ -13,6 +13,7 @@ import { jwtConfig } from '@project/config/config-users';
 import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 import { createJWTPayload } from '@project/util/util-core';
 import * as crypto from 'node:crypto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -78,6 +79,21 @@ export class AuthenticationService {
     }
 
     const userEntity = new PlatformUserEntity({ ...user, ...dto });
+    return this.platformUserRepository.update(id, userEntity);
+  }
+
+  /** Изменение пароля пользователя */
+
+  async changePassword(dto: ChangePasswordDto, id: string) {
+    const { oldPassword, newPassword } = dto;
+    const user = await this.platformUserRepository.findById(id);
+    await this.verifyUser({
+      email: user.email,
+      password: oldPassword,
+    });
+    const userEntity = await new PlatformUserEntity({ ...user }).setPassword(
+      newPassword
+    );
     return this.platformUserRepository.update(id, userEntity);
   }
 
