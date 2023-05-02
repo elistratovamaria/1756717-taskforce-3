@@ -3,12 +3,12 @@ POST http://localhost:3000/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "John",
-  "email": "john@gmail.com",
-  "city": "Moscow",
+  "name": "Mary",
+  "email": "mary@gmail.com",
+  "city": "Vladivostok",
   "password": "123456",
-  "role": "Исполнитель",
-  "dateBirth": "1990-02-22"
+  "role": "executor",
+  "dateBirth": "1990-05-07"
 }
 
 ###
