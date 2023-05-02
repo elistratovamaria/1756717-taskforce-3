@@ -13,6 +13,9 @@ export const enum AuthUserValidationMessage {
   UserRoleNotValid = 'The user can be only customer or executor',
   DateBirthNotValid = 'The date of birth is not valid',
   DateBirthMinor = 'User should be older than 18',
+  InfoNotValid = 'Info should be less than 300 symbols',
+  SpecialityAmount = 'There should be less than 5 specialities',
+  SpecialityUnique = 'All specialities should be unique',
 }
 
 export const enum UserSetting {
@@ -20,6 +23,7 @@ export const enum UserSetting {
   NameMaxLength = 50,
   PasswordMinLength = 6,
   PasswordMaxLength = 12,
-  DescriptionMaxLength = 300,
+  InfoMaxLength = 300,
   MinimumAge = 18,
+  SpecialityMaxAmount = 5
 }

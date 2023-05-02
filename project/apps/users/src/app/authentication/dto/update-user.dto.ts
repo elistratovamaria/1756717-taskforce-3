@@ -1,7 +1,8 @@
 import { City } from '@project/shared/shared-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { ArrayMaxSize, ArrayUnique, IsString, Length, IsEnum, IsISO8601, Min, IsOptional, MaxLength } from 'class-validator';
-import { PlatformUserValidationMessage } from '../platform-user.constant';
+import { ArrayMaxSize, IsString, Length, IsEnum, IsISO8601, IsOptional, MaxLength } from 'class-validator';
+import { AuthUserValidationMessage, UserSetting } from '../authentication.constant';
+import { MinimumValidAge } from '../validators/age.validator';
 
 export class UpdateUserDto {
   @ApiProperty({
@@ -10,7 +11,7 @@ export class UpdateUserDto {
   })
   @IsOptional()
   @IsString()
-  @Length(3, 50, { message: PlatformUserValidationMessage.NameNotValid })
+  @Length(UserSetting.NameMinLength, UserSetting.NameMaxLength, { message: AuthUserValidationMessage.NameNotValid })
   public name: string;
 
   @ApiProperty({
@@ -19,7 +20,7 @@ export class UpdateUserDto {
     type: () => typeof City.Moscow
   })
   @IsOptional()
-  @IsEnum(City, { message: PlatformUserValidationMessage.CityNotValid })
+  @IsEnum(City, { message: AuthUserValidationMessage.CityNotValid })
   public city: City;
 
   @ApiProperty({
@@ -27,8 +28,8 @@ export class UpdateUserDto {
     example: '1980-01-01'
   })
   @IsOptional()
-  @IsISO8601({}, { message: PlatformUserValidationMessage.DateBirthNotValid })
-  @Min(18, { message: PlatformUserValidationMessage.DateBirthMinor })
+  @IsISO8601({}, { message: AuthUserValidationMessage.DateBirthNotValid })
+  @MinimumValidAge(UserSetting.MinimumAge, { message: AuthUserValidationMessage.DateBirthMinor})
   public dateBirth: Date;
 
   @ApiProperty({
@@ -36,7 +37,7 @@ export class UpdateUserDto {
     example: 'Lorem ipsum dolor sit amet'
   })
   @IsOptional()
-  @MaxLength(300, {message: PlatformUserValidationMessage.InfoNotValid})
+  @MaxLength(UserSetting.InfoMaxLength, {message: AuthUserValidationMessage.InfoNotValid})
   public info: string;
 
   @ApiProperty({
@@ -44,7 +45,6 @@ export class UpdateUserDto {
     example: 'Webdev, PHP, Laravel'
   })
   @IsOptional()
-  @ArrayMaxSize(5, {message: PlatformUserValidationMessage.SpecialityLength})
-  @ArrayUnique({}, {message: PlatformUserValidationMessage.SpecialityUnique})
+  @ArrayMaxSize(UserSetting.SpecialityMaxAmount, {message: AuthUserValidationMessage.SpecialityAmount})
   public speciality: string[];
 }

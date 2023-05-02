@@ -7,7 +7,7 @@ Content-Type: application/json
   "email": "mary@gmail.com",
   "city": "Vladivostok",
   "password": "123456",
-  "role": "executor",
+  "role": "Executor",
   "dateBirth": "1990-05-07"
 }
 
@@ -19,7 +19,7 @@ Content-Type: application/json
 
 {
   "email": "john@gmail.com",
-  "password": "123456"
+  "password": "1234567"
 }
 
 ###
@@ -31,16 +31,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDJlYjVjN
 ###
 
 # Update user by ID
-PATCH http://localhost:3000/api/auth/642eb5c4859b4c3ee7ea7b50 HTTP/1.1
+PATCH http://localhost:3000/api/auth/64510cb2329c20a57d56c6cf HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUxMGNiMjMyOWMyMGE1N2Q1NmM2Y2YiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6ItCY0YHQv9C-0LvQvdC40YLQtdC70YwiLCJuYW1lIjoiTWFyeSIsImlhdCI6MTY4MzA1NzQ5MiwiZXhwIjoxNjgzMDU4MDkyfQ.7EQih4L-4BuJOVJVCDt-lbfEXCa3q1Vc-HsUQ7Vdu3Y
 
 {
   "name": "Mary",
-  "city": "Владивосток",
-  "info": "Супер классный специалист!",
+  "city": "Vladivostok",
+  "info": "Супер классный!",
   "speciality": [
     "HTML",
-    "CSS"
+    "CSS",
+    "WebDev",
+    "WebDev",
+    "PHP"
   ]
 }
 

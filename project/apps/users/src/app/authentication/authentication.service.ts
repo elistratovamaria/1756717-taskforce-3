@@ -2,7 +2,7 @@ import { Injectable, ConflictException, Inject, NotFoundException, UnauthorizedE
 import { PlatformUserRepository } from '../platform-user/platform-user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { UpdateUserDto } from '../platform-user/dto/update-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import dayjs from 'dayjs';
 import { AuthUser } from './authentication.constant';
@@ -76,6 +76,10 @@ export class AuthenticationService {
     const user = await this.platformUserRepository.findById(id);
     if (!user) {
       throw new NotFoundException(AuthUser.NotFound);
+    }
+
+    if (dto.speciality) {
+      dto.speciality = [...new Set(dto.speciality)];
     }
 
     const userEntity = new PlatformUserEntity({ ...user, ...dto });

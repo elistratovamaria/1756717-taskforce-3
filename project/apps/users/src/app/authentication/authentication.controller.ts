@@ -5,12 +5,12 @@ import { fillObject } from '@project/util/util-core';
 import { UserRdo } from './rdo/user.rdo';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
-import { ExecutorRdo } from '../platform-user/rdo/executor.rdo';
-import { CustomerRdo } from '../platform-user/rdo/customer.rdo';
+import { ExecutorRdo } from './rdo/executor.rdo';
+import { CustomerRdo } from './rdo/customer.rdo';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 import { UserRole } from '@project/shared/shared-types';
-import { UpdateUserDto } from '../platform-user/dto/update-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { NotifyService } from '../notify/notify.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RequestWithUser } from '@project/shared/shared-types';
@@ -87,6 +87,7 @@ export class AuthenticationController {
   }
 
   /** Изменение информации о пользователе */
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     type: ExecutorRdo,
     status: HttpStatus.OK,
