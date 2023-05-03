@@ -62,4 +62,10 @@ export class UserRdo {
     example: 'WebDev, PHP, Laravel'
   })
   public speciality: string[];
+
+  @ApiProperty({
+    description: 'Date of registration',
+    example: '2023-03-05'
+  })
+  public createdAt: Date;
 }

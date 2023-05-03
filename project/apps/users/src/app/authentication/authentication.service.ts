@@ -79,7 +79,8 @@ export class AuthenticationService {
     }
 
     if (dto.speciality) {
-      dto.speciality = [...new Set(dto.speciality)];
+      const speciality = dto.speciality.map((spec) => spec.toLowerCase());
+      dto.speciality = [...new Set(speciality)];
     }
 
     const userEntity = new PlatformUserEntity({ ...user, ...dto });

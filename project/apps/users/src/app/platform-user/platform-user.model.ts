@@ -5,6 +5,7 @@ import { User, UserRole, City } from '@project/shared/shared-types';
 @Schema({
   collection: 'users',
   timestamps: true,
+  discriminatorKey: 'role'
 })
 export class PlatformUserModel extends Document implements User {
   @Prop({
@@ -15,46 +16,46 @@ export class PlatformUserModel extends Document implements User {
   @Prop({
     required: true,
   })
-  email: string;
+  public email: string;
 
   @Prop({
     required: true,
     type: String,
     enum: City
   })
-  city: City;
+  public city: City;
 
   @Prop({
     required: true,
   })
-  passwordHash: string;
+  public passwordHash: string;
 
   @Prop({
     required: true,
     type: String,
     enum: UserRole,
   })
-  role: UserRole;
+  public role: UserRole;
 
   @Prop({
     default: '',
   })
-  avatar?: string;
+  public avatar?: string;
 
   @Prop({
     required: true,
   })
-  dateBirth: Date;
+  public dateBirth: Date;
 
   @Prop({
     default: '',
   })
-  info: string;
+  public info: string;
 
   @Prop({
     default: [],
   })
-  speciality: string[];
+  public speciality: string[];
 }
 
 export const PlatformUserSchema = SchemaFactory.createForClass(PlatformUserModel);

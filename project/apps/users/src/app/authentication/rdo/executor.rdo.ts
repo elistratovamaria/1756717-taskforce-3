@@ -93,4 +93,10 @@ export class ExecutorRdo {
   })
   @Expose()
   public placeInRating: number;
+
+  @ApiProperty({
+    description: 'Date of registration',
+    example: '2023-03-05'
+  })
+  public createdAt: Date;
 }

@@ -33,14 +33,14 @@ export class AuthenticationController {
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
-    description: 'The user with this email is already exists'
+    description: 'The user with this email already exists'
   })
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.register(dto);
-    const { email, name } = newUser;
+    const { email, name, role } = newUser;
     await this.notifyService.registerSubscriber({ email, name });
-    return fillObject(UserRdo, newUser);
+    return role === UserRole.Customer ? fillObject(CustomerRdo, newUser) : fillObject(ExecutorRdo, newUser);
   }
 
   /** Авторизация пользователя */
@@ -66,12 +66,7 @@ export class AuthenticationController {
 
   /** Получение информации о пользователе */
   @ApiResponse({
-    type: ExecutorRdo,
-    status: HttpStatus.OK,
-    description: 'User found'
-  })
-  @ApiResponse({
-    type: CustomerRdo,
+    type: UserRdo,
     status: HttpStatus.OK,
     description: 'User found'
   })
@@ -79,7 +74,6 @@ export class AuthenticationController {
     status: HttpStatus.NOT_FOUND,
     description: 'The user with this id does not exist'
   })
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   public async show(@Param('id', MongoidValidationPipe) id: string) {
     const existUser = await this.authService.getUser(id);
@@ -103,8 +97,8 @@ export class AuthenticationController {
   })
   @Patch(':id')
   public async update(@Param('id', MongoidValidationPipe) id: string, @Body() dto: UpdateUserDto) {
-    const user = await this.authService.update(id, dto);
-    return fillObject(ExecutorRdo, user);
+    const updatedUser = await this.authService.update(id, dto);
+    return updatedUser.role === UserRole.Customer ? fillObject(CustomerRdo, updatedUser) : fillObject(ExecutorRdo, updatedUser);
   }
 
   @UseGuards(JwtAuthGuard)
