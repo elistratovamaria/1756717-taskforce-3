@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Length, IsInt, Min, Max } from 'class-validator';
-import { TaskResponseValidationMessage } from '../task-response.constant';
+import { TaskResponseValidationMessage, TaskResponseSetting } from '../task-response.constant';
 
 export class CreateResponseDto {
   @ApiProperty({
@@ -8,7 +8,7 @@ export class CreateResponseDto {
     example: 'Задание выполнено качественно и в срок'
   })
   @IsString()
-  @Length(50, 500, {message: TaskResponseValidationMessage.MessageNotValid })
+  @Length(TaskResponseSetting.MessageMinLength, TaskResponseSetting.MessageMaxLength, {message: TaskResponseValidationMessage.MessageNotValid })
   public message: string;
 
   @ApiProperty({
@@ -23,7 +23,7 @@ export class CreateResponseDto {
     example: 5
   })
   @IsInt()
-  @Min(1, {message: TaskResponseValidationMessage.EstimationNotValid})
-  @Max(5, {message: TaskResponseValidationMessage.EstimationNotValid})
+  @Min(TaskResponseSetting.EstimationMinValue, {message: TaskResponseValidationMessage.EstimationNotValid})
+  @Max(TaskResponseSetting.EstimationMaxValue, {message: TaskResponseValidationMessage.EstimationNotValid})
   public estimation: number;
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { TaskCommentMemoryRepository } from './task-comment-memory.repository';
+import { TaskCommentRepository } from './task-comment.repository';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { TaskCommentEntity } from './task-comment.entity';
 
 @Injectable()
 export class TaskCommentService {
   constructor(
-    private readonly taskCommentRepository: TaskCommentMemoryRepository
+    private readonly taskCommentRepository: TaskCommentRepository
   ) {}
 
   public async createComment(dto: CreateCommentDto) {
@@ -22,5 +22,9 @@ export class TaskCommentService {
 
   public async deleteComment(id: number) {
     this.taskCommentRepository.destroy(id);
+  }
+
+  public async deleteCommentByTaskId(taskId: number) {
+    this.taskCommentRepository.destroyByTaskId(taskId);
   }
 }

@@ -6,8 +6,8 @@ export class TaskCommentRdo {
     description: 'The unique comment id',
     example: '12'
   })
-  @Expose({ name: '_id' })
-  public id: string;
+  @Expose({ name: 'id' })
+  public id: number;
 
   @ApiProperty({
     description: 'Comment message',
@@ -22,4 +22,11 @@ export class TaskCommentRdo {
   })
   @Expose()
   public taskId: string;
+
+  @ApiProperty({
+    description: 'User ID',
+    example: '6452ca1f33bbee8ea383010e'
+  })
+  @Expose()
+  public userId: string;
 }

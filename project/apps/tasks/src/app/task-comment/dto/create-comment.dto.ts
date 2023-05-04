@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Length, IsInt } from 'class-validator';
-import { TaskCommentValidationMessage } from '../task-comment.constant';
+import { TaskCommentValidationMessage, TaskCommentSetting } from '../task-comment.constant';
 
 export class CreateCommentDto {
   @ApiProperty({
@@ -8,7 +8,7 @@ export class CreateCommentDto {
     example: 'Легкое задание'
   })
   @IsString()
-  @Length(10, 300, {message: TaskCommentValidationMessage.MessageNotValid})
+  @Length(TaskCommentSetting.MessageMinLength, TaskCommentSetting.MessageMaxLength, {message: TaskCommentValidationMessage.MessageNotValid})
   public message: string;
 
   @ApiProperty({
@@ -17,4 +17,11 @@ export class CreateCommentDto {
   })
   @IsInt()
   public taskId: number;
+
+  @ApiProperty({
+    description: 'User ID',
+    example: '6452ca1f33bbee8ea383010e'
+  })
+  @IsInt()
+  public userId: string;
 }

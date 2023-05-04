@@ -43,4 +43,17 @@ export class TaskCommentController {
   public async delete(@Param('id', ParseIntPipe) id: number) {
     this.commentService.deleteComment(id);
   }
+
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'The comments have been successfully deleted'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task with this ID does not exist'
+  })
+  @Delete(':taskId')
+  public async deleteByTaskId(@Param('taskId', ParseIntPipe) taskId: number) {
+    this.commentService.deleteCommentByTaskId(taskId);
+  }
 }
