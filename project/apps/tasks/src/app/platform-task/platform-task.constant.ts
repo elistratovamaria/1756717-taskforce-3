@@ -10,5 +10,18 @@ export const enum PlatformTaskValidationMessage {
   TagsLengthNotValid = 'Tag length should be from 3 to 10 symbols',
 }
 
+export const enum TaskSetting {
+  TitleMinLength = 20,
+  TitleMaxLength = 50,
+  DescriptionMinLength = 100,
+  DescriptionMaxLength = 1024,
+  PriceMinValue = 0,
+  AddressMinLength = 10,
+  AddressMaxLength = 255,
+  TagsMaxAmount = 5,
+  TagMinLength = 3,
+  TagMaxLength = 10,
+}
+
 export const DEFAULT_TASK_COUNT_LIMIT = 25;
 export const DEFAULT_SORT_DIRECTION = 'desc';

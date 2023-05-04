@@ -26,11 +26,10 @@ model Task {
   status         StatusTask
   comments       Comment[]
   response       Response?
-  //myTask         MyTask?    @relation(fields: [myTaskId], references: [myTaskId])
-  //myTaskId       Int?       @map("my_task_id")
   createdAt      DateTime   @default(now()) @map("created_at")
   publishAt      DateTime   @updatedAt @map("publish_at")
   userId         String?    @map("user_id")
+  executorId     String?    @map("executor_id")
 
   @@map("tasks")
 }
@@ -67,17 +66,6 @@ model Response {
 
   @@map("responses")
 }
-
-//model MyTask {
-  //myTaskId  Int      @id @default(autoincrement()) @map("my_task_id")
-  //task      Task[]
-  //taskId    Int      @map("task_id")
-  //userId    String   @map("user_id")
-  //createdAt DateTime @default(now()) @map("created_at")
-  //updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  //@@map("myTasks")
-//}
 
 enum City {
   Moscow

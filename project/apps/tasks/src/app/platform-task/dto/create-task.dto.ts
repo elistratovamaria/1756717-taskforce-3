@@ -1,6 +1,6 @@
 import { City, Category } from '@project/shared/shared-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { PlatformTaskValidationMessage } from '../platform-task.constant';
+import { PlatformTaskValidationMessage, TaskSetting } from '../platform-task.constant';
 import { IsISO8601, IsString, Min, Length, ArrayMaxSize, IsEnum, IsOptional, MinDate, Matches} from 'class-validator';
 
 
@@ -10,7 +10,7 @@ export class CreateTaskDto {
     example: 'Клининг помещения'
   })
   @IsString()
-  @Length(20, 50, {message: PlatformTaskValidationMessage.TitleNotValid})
+  @Length(TaskSetting.TitleMinLength, TaskSetting.TitleMaxLength, {message: PlatformTaskValidationMessage.TitleNotValid})
   public title: string;
 
   @ApiProperty({
@@ -18,7 +18,7 @@ export class CreateTaskDto {
     example: 'Выполнить клининг офисного помещения'
   })
   @IsString()
-  @Length(100, 1024, {message: PlatformTaskValidationMessage.DescriptionNotValid})
+  @Length(TaskSetting.DescriptionMinLength, TaskSetting.DescriptionMaxLength, {message: PlatformTaskValidationMessage.DescriptionNotValid})
   public description: string;
 
   @ApiProperty({
@@ -33,7 +33,7 @@ export class CreateTaskDto {
     example: 1000
   })
   @IsOptional()
-  @Min(0, {message: PlatformTaskValidationMessage.PriceNotValid})
+  @Min(TaskSetting.PriceMinValue, {message: PlatformTaskValidationMessage.PriceNotValid})
   public price?: number;
 
   @ApiProperty({
@@ -59,7 +59,7 @@ export class CreateTaskDto {
     example: 'Санкт-Петербург, наб. реки Карповки, д.5 литера П'
   })
   @IsOptional()
-  @Length(10, 255, {message: PlatformTaskValidationMessage.AddressNotValid})
+  @Length(TaskSetting.AddressMinLength, TaskSetting.AddressMaxLength, {message: PlatformTaskValidationMessage.AddressNotValid})
   public address?: string;
 
   @ApiProperty({
@@ -67,8 +67,8 @@ export class CreateTaskDto {
     example: ['быстро', 'дешёво']
   })
   @IsOptional()
-  @ArrayMaxSize(5, {message: PlatformTaskValidationMessage.TagsAmountNotValid})
-  @Length(3, 10, {each: true})
+  @ArrayMaxSize(TaskSetting.TagsMaxAmount, {message: PlatformTaskValidationMessage.TagsAmountNotValid})
+  @Length(TaskSetting.TagMinLength, TaskSetting.TagMaxLength, {each: true})
   public tags?: string[];
 
   @ApiProperty({
