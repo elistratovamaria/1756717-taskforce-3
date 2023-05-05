@@ -1,20 +1,22 @@
-import { City, StatusTask, Category, Task, Comment, /*Response*/ } from '@project/shared/shared-types';
+import { City, StatusTask, Task, Comment, Reply } from '@project/shared/shared-types';
 
 export class PlatformTaskEntity implements Task {
   public id: number;
   public title: string;
   public description: string;
-  public category: Category;
+  public categoryId: number;
   public price?: number;
   public deadline?: Date;
   public image?: string;
   public address?: string;
   public tags?: string[];
-  public city: any;
-  public status: any;
+  public city: string;
+  public status: string;
   public userId: string;
-  /*public response?: Response;*/
+  public executorId?: string;
   public comments?: Comment[];
+  public hasResponse: boolean;
+  public replies?: Reply[];
 
   constructor(platformTask: Task) {
     this.fillEntity(platformTask);
@@ -31,7 +33,7 @@ export class PlatformTaskEntity implements Task {
     this.id = platformTask.id;
     this.title = platformTask.title;
     this.description = platformTask.description;
-    this.category = platformTask.category;
+    this.categoryId = platformTask.categoryId;
     this.price = platformTask.price;
     this.deadline = platformTask.deadline;
     this.image = platformTask.image;
@@ -40,7 +42,9 @@ export class PlatformTaskEntity implements Task {
     this.city = platformTask.city;
     this.status = platformTask.status;
     this.userId = platformTask.userId;
+    this.executorId = platformTask.executorId;
     this.comments = [];
-    /*this.response = platformTask.response;*/
+    this.hasResponse = platformTask.hasResponse;
+    this.replies = platformTask.replies;
   }
 }

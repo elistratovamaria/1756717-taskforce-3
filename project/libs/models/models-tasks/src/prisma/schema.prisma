@@ -22,14 +22,16 @@ model Task {
   image          String?    @default("")
   address        String?    @default("")
   tags           String[]
-  city           City
-  status         StatusTask
+  city           String
+  status         String
   comments       Comment[]
   response       Response?
   createdAt      DateTime   @default(now()) @map("created_at")
   publishAt      DateTime   @updatedAt @map("publish_at")
   userId         String?    @map("user_id")
   executorId     String?    @map("executor_id")
+  hasResponse    Boolean    @default(false) @map("has_response")
+  replies        Reply[]
 
   @@map("tasks")
 }
@@ -65,6 +67,15 @@ model Response {
   updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("responses")
+}
+
+model Reply {
+  replyId   Int      @id @default(autoincrement()) @map("reply_id")
+  userId    String   @map("user_id")
+  taskId    Int      @map("task_id")
+  task      Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("replies")
 }
 
 enum City {

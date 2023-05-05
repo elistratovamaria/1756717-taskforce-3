@@ -85,4 +85,11 @@ export class TaskRdo {
   })
   @Expose()
   public userId: string;
+
+  @ApiProperty({
+    description: 'Executor ID',
+    example: '13'
+  })
+  @Expose()
+  public executorId: string;
 }

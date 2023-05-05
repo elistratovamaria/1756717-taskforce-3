@@ -23,12 +23,12 @@ export class UpdateTaskDto {
   public description?: string;
 
   @ApiProperty({
-    description: 'Task category',
-    example: 'Клининг'
+    description: 'Category ID',
+    example: 2
   })
   @IsOptional()
   @IsString()
-  public category?: string;
+  public categoryId?: number;
 
   @ApiProperty({
     description: 'Task price',

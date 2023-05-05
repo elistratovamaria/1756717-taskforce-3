@@ -3,6 +3,10 @@ export const enum TaskResponseValidationMessage {
   EstimationNotValid = 'Estimation should be a number from 1 to 5'
 }
 
+export const enum TaskResponseException {
+  Forbidden = 'You can make a response only for those executors who have done your task'
+}
+
 export const enum TaskResponseSetting {
   MessageMinLength = 50,
   MessageMaxLength = 500,

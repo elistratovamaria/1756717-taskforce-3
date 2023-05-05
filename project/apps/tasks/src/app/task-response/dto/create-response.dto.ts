@@ -22,7 +22,7 @@ export class CreateResponseDto {
     description: 'User ID',
     example: '6452ca1f33bbee8ea383010e'
   })
-  @IsInt()
+  @IsString()
   public userId: string;
 
   @ApiProperty({

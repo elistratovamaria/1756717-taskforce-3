@@ -23,7 +23,9 @@ export class PlatformTaskService {
       address: dto.address ?? '',
       tags: dto.tags ?? [],
       status: StatusTask.New,
-      userId: ''
+      userId: '',
+      hasResponse: false,
+      replies: []
     };
     const record = new PlatformTaskEntity(task);
 
