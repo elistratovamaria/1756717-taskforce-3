@@ -13,7 +13,7 @@ export class CreateCommentDto {
 
   @ApiProperty({
     description: 'Task ID',
-    example: '234'
+    example: 234
   })
   @IsInt()
   public taskId: number;
@@ -22,6 +22,6 @@ export class CreateCommentDto {
     description: 'User ID',
     example: '6452ca1f33bbee8ea383010e'
   })
-  @IsInt()
+  @IsString()
   public userId: string;
 }

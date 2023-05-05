@@ -42,8 +42,11 @@ export class TaskCommentRepository implements CRUDRepository<TaskCommentEntity, 
     });
   }
 
-  public async find({ limit, page }: TaskCommentQuery): Promise<Comment[]> {
+  public async find({ limit, page }: TaskCommentQuery, taskId: number): Promise<Comment[]> {
     return await this.prisma.comment.findMany({
+      where: {
+        taskId
+      },
       take: limit,
       skip: page > 0 ? limit * (page - 1) : undefined,
     });

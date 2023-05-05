@@ -10,7 +10,7 @@ export class TaskResponseMemoryRepository implements CRUDRepository<TaskResponse
 
   public async create(item: TaskResponseEntity): Promise<Response> {
     const entry = { ...item.toObject(), _id: crypto.randomUUID()};
-    this.repository[entry._id] = entry;
+    this.repository[entry.id] = entry;
 
     return {...entry};
   }
@@ -28,7 +28,7 @@ export class TaskResponseMemoryRepository implements CRUDRepository<TaskResponse
   }
 
   public async update(id: string, item: TaskResponseEntity): Promise<Response> {
-    this.repository[id] = {...item.toObject(), _id: id};
+    this.repository[id] = {...item.toObject(), id: +id};
     return this.findById(id);
   }
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { TaskResponseMemoryRepository } from './task-response-memory.repository';
+import { TaskResponseRepository } from './task-response.repository';
 import { CreateResponseDto } from './dto/create-response.dto';
 import { TaskResponseEntity } from './task-response.entity';
 
 @Injectable()
 export class TaskResponseService {
   constructor(
-    private readonly taskResponseRepository: TaskResponseMemoryRepository
+    private readonly taskResponseRepository: TaskResponseRepository
   ) {}
 
   public async createResponse(dto: CreateResponseDto) {

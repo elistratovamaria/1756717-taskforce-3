@@ -19,6 +19,13 @@ export class CreateResponseDto {
   public taskId: number;
 
   @ApiProperty({
+    description: 'User ID',
+    example: '6452ca1f33bbee8ea383010e'
+  })
+  @IsInt()
+  public userId: string;
+
+  @ApiProperty({
     description: 'Evaluation by the customer of the completed task',
     example: 5
   })

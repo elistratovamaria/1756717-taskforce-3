@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TaskResponseController } from './task-response.controller';
 import { TaskResponseService } from './task-response.service';
-import { TaskResponseMemoryRepository } from './task-response-memory.repository';
+import { TaskResponseRepository } from './task-response.repository';
 
 @Module({
   controllers: [TaskResponseController],
-  providers: [TaskResponseService, TaskResponseMemoryRepository],
+  providers: [TaskResponseService, TaskResponseRepository],
 })
 export class TaskResponseModule {}

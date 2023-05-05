@@ -1,9 +1,10 @@
 import { Response } from '@project/shared/shared-types';
 
 export class TaskResponseEntity implements Response {
-  public _id: string;
+  public id: number;
   public message: string;
-  public taskId: string;
+  public taskId: number;
+  public userId: string;
   public estimation: number;
 
   constructor(taskResponse: Response) {
@@ -15,9 +16,10 @@ export class TaskResponseEntity implements Response {
   }
 
   public fillEntity(taskResponse: Response) {
-    this._id = taskResponse._id;
+    this.id = taskResponse.id;
     this.message = taskResponse.message;
     this.taskId = taskResponse.taskId;
+    this.userId = taskResponse.userId;
     this.estimation = taskResponse.estimation;
   }
 }
