@@ -1,4 +1,4 @@
-import { City, StatusTask, Task, Comment, Reply } from '@project/shared/shared-types';
+import { Task, Comment, Reply } from '@project/shared/shared-types';
 
 export class PlatformTaskEntity implements Task {
   public id: number;

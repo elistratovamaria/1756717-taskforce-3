@@ -1,9 +1,10 @@
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Category } from '@project/shared/shared-types';
 import { TaskCategoryRepository } from './task-category.repository';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { TaskCategoryEntity } from './task-category.entity';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { TaskCategoryException } from './task-category.constant';
 
 @Injectable()
 export class TaskCategoryService {
@@ -12,6 +13,13 @@ export class TaskCategoryService {
   ) {}
 
   async createCategory(dto: CreateCategoryDto): Promise<Category> {
+    const categories = await this.taskCategoryRepository.find();
+    const categoriesTitles = categories.map((category) => category.title);
+
+    if (categoriesTitles.includes(dto.title)) {
+      throw new ConflictException(TaskCategoryException.CategoryExists);
+    }
+
     const categoryEntity = new TaskCategoryEntity(dto);
     return this.taskCategoryRepository.create(categoryEntity);
   }

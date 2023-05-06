@@ -1,5 +1,3 @@
-import { City } from './city.enum';
-import { StatusTask } from './status-task.enum';
 import { Comment } from './comment.interface';
 import { Response } from './response.interface';
 import { Reply } from './reply.interface';

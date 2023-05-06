@@ -1,14 +1,17 @@
 #Create a new task
 POST http://localhost:3333/api/tasks HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODMzOTk4NDksImV4cCI6MTY4MzQwMDQ0OX0.03VWTnbY9BrUHLt5aUbV6gQROhNGXUkmGH7bYidyiCM
 
 {
   "title": "Клининг большого помещения",
   "description": "Провести клининг офисного помещения, сделать чисто-чисто, очень чисто, чисто-чисто, очень чисто, чисто-чисто, очень чисто",
-  "category": "Клининг",
+  "deadline": "2023-05-10",
+  "categoryId": 3,
   "city": "Moscow",
   "tags": [
-    "WebDev"
+    "Clining",
+    "Home"
   ]
 }
 
@@ -20,7 +23,28 @@ GET http://localhost:3333/api/tasks/2 HTTP/1.1
 ###
 
 # Delete task by ID
-DELETE http://localhost:3333/api/tasks/1 HTTP/1.1
+DELETE http://localhost:3333/api/tasks/8 HTTP/1.1
+
+###
+
+# Update task by ID
+PATCH http://localhost:3333/api/tasks/7 HTTP/1.1
+Content-Type: application/json
+
+{
+  "city": "Vladivostok"
+}
+
+###
+
+# Change task status
+PATCH http://localhost:3333/api/tasks/7/status HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODMzOTk4NDksImV4cCI6MTY4MzQwMDQ0OX0.03VWTnbY9BrUHLt5aUbV6gQROhNGXUkmGH7bYidyiCM
+
+{
+  "status": "InProgress"
+}
 
 ###
 

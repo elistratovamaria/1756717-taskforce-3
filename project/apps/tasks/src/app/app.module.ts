@@ -11,7 +11,7 @@ import { TaskResponseModule } from './task-response/task-response.module';
     TaskCategoryModule,
     PlatformTaskModule,
     TaskCommentModule,
-    TaskResponseModule
+    TaskResponseModule,
   ],
   controllers: [],
   providers: [],

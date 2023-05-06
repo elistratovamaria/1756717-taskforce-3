@@ -77,17 +77,3 @@ model Reply {
 
   @@map("replies")
 }
-
-enum City {
-  Moscow
-  SaintPetersburg
-  Vladivostok
-}
-
-enum StatusTask {
-  New
-  Cancelled
-  InProgress
-  Done
-  Failed
-}

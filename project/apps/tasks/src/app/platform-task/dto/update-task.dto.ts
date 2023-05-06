@@ -1,7 +1,7 @@
-import { City } from '@project/shared/shared-types';
+import { City, StatusTask } from '@project/shared/shared-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { PlatformTaskValidationMessage, TaskSetting } from '../platform-task.constant';
-import { IsISO8601, IsString, Min, Length, ArrayMaxSize, IsEnum, IsOptional, MinDate, Matches} from 'class-validator';
+import { IsISO8601, IsString, Min, Length, ArrayMaxSize, IsEnum, IsOptional, Matches, IsInt} from 'class-validator';
 
 export class UpdateTaskDto {
   @ApiProperty({
@@ -27,7 +27,7 @@ export class UpdateTaskDto {
     example: 2
   })
   @IsOptional()
-  @IsString()
+  @IsInt()
   public categoryId?: number;
 
   @ApiProperty({
@@ -44,7 +44,6 @@ export class UpdateTaskDto {
   })
   @IsOptional()
   @IsISO8601({}, {message: PlatformTaskValidationMessage.DeadlineNotValid})
-  @MinDate(new Date(), {message: PlatformTaskValidationMessage.DeadlineNotValid})
   public deadline?: Date;
 
   @ApiProperty({
@@ -80,4 +79,12 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsEnum(City, { message: PlatformTaskValidationMessage.CityNotValid })
   public city?: City;
+
+  @ApiProperty({
+    description: 'Task city',
+    example: 'Москва'
+  })
+  @IsOptional()
+  @IsEnum(StatusTask, { message: PlatformTaskValidationMessage.StatusNotValid })
+  public status?: StatusTask;
 }

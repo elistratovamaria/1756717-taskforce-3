@@ -15,7 +15,7 @@ import { PlatformExecutorUserSchema } from './platform-executor-user.model';
         { name: UserRole.Customer, schema: PlatformCustomerUserSchema },
         { name: UserRole.Executor, schema: PlatformExecutorUserSchema }
       ]
-    }
+    },
   ])],
   providers: [PlatformUserRepository],
   exports: [PlatformUserRepository],

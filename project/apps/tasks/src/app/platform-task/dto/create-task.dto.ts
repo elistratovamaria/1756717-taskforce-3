@@ -1,8 +1,7 @@
 import { City } from '@project/shared/shared-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { PlatformTaskValidationMessage, TaskSetting } from '../platform-task.constant';
-import { IsISO8601, IsString, Min, Length, ArrayMaxSize, IsEnum, IsOptional, MinDate, Matches} from 'class-validator';
-
+import { IsISO8601, IsString, Min, Length, ArrayMaxSize, IsEnum, IsOptional, Matches, IsInt} from 'class-validator';
 
 export class CreateTaskDto {
   @ApiProperty({
@@ -25,7 +24,7 @@ export class CreateTaskDto {
     description: 'Category ID',
     example: 2
   })
-  @IsString()
+  @IsInt()
   public categoryId: number;
 
   @ApiProperty({
@@ -42,13 +41,13 @@ export class CreateTaskDto {
   })
   @IsOptional()
   @IsISO8601({}, {message: PlatformTaskValidationMessage.DeadlineNotValid})
-  @MinDate(new Date(), {message: PlatformTaskValidationMessage.DeadlineNotValid})
   public deadline?: Date;
 
   @ApiProperty({
     description: 'Task picture',
     example: '/img/img.png'
   })
+
   @IsOptional()
   @IsString()
   @Matches(/\.(jpe?g|png)$/i, {message: PlatformTaskValidationMessage.ImageNotValid})

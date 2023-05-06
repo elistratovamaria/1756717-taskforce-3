@@ -1,16 +1,20 @@
-import { Body, Controller, Post, Get, Param, HttpStatus, Delete, Query} from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, HttpStatus, Delete, Query, Patch, Req} from '@nestjs/common';
 import { PlatformTaskService } from './platform-task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { fillObject } from '@project/util/util-core';
 import { TaskRdo } from './rdo/task.rdo';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { TaskQuery } from './query/task.query';
+import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskCommentService } from '../task-comment/task-comment.service';
+import { RequestWithIdUser } from '@project/shared/shared-types';
 
 @ApiTags('tasks')
 @Controller('tasks')
 export class PlatformTaskController {
   constructor(
-    private readonly taskService: PlatformTaskService
+    private readonly taskService: PlatformTaskService,
+    private readonly taskCommentService: TaskCommentService
   ) {}
 
   @ApiResponse({
@@ -23,8 +27,8 @@ export class PlatformTaskController {
     description: 'User does not have enough rights to add a task'
   })
   @Post()
-  public async create(@Body() dto: CreateTaskDto) {
-    const newTask = await this.taskService.createTask(dto);
+  public async create(@Body() dto: CreateTaskDto, @Req() request?: RequestWithIdUser) {
+    const newTask = await this.taskService.createTask(dto, request);
     return fillObject(TaskRdo, newTask);
   }
 
@@ -58,6 +62,7 @@ export class PlatformTaskController {
   @Delete('/:id')
   public async delete(@Param('id') id: number) {
     this.taskService.deleteTask(id);
+    this.taskCommentService.deleteCommentByTaskId(id);
   }
 
 
@@ -70,5 +75,47 @@ export class PlatformTaskController {
   async index(@Query() query: TaskQuery) {
     const tasks = await this.taskService.getTasks(query);
     return fillObject(TaskRdo, tasks);
+  }
+
+  @ApiResponse({
+    type: TaskRdo,
+    status: HttpStatus.OK,
+    description: 'The task has been successfully updated'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task with this ID does not exist'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have enough rights to add a task'
+  })
+  @Patch('/:id')
+  public async update(@Body() dto: UpdateTaskDto, @Param('id') id: number) {
+    const updatedTask = await this.taskService.updateTask(id, dto);
+    return fillObject(TaskRdo, updatedTask);
+  }
+
+  @ApiResponse({
+    type: TaskRdo,
+    status: HttpStatus.OK,
+    description: 'The status has been successfully updated'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task with this ID does not exist'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have enough rights to add a task'
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Incorrect status changing'
+  })
+  @Patch('/:id/status')
+  public async changeStatus(@Param('id') id: number, @Body() dto: UpdateTaskDto, @Req() request?: RequestWithIdUser) {
+    const updatedTask = await this.taskService.changeStatus(id, dto, request);
+    return fillObject(TaskRdo, updatedTask);
   }
 }

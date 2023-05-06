@@ -1,10 +1,10 @@
 # Create a new comment
-POST http://localhost:3333/api/comments/2 HTTP/1.1
+POST http://localhost:3333/api/comments/4 HTTP/1.1
 Content-Type: application/json
 
 {
   "message": "Легкое задание",
-  "taskId": 2,
+  "taskId": 4,
   "userId": "3"
 }
 
