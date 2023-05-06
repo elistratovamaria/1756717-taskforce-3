@@ -7,7 +7,7 @@ import { TaskCommentQuery } from './query/task-comment.query';
 @Injectable()
 export class TaskCommentService {
   constructor(
-    private readonly taskCommentRepository: TaskCommentRepository
+    private readonly taskCommentRepository: TaskCommentRepository,
   ) {}
 
   public async createComment(dto: CreateCommentDto, taskId: number) {

@@ -6,6 +6,6 @@ import { TaskCommentRepository } from './task-comment.repository';
 @Module({
   controllers: [TaskCommentController],
   providers: [TaskCommentService, TaskCommentRepository],
-  exports: [TaskCommentService]
+  exports: [TaskCommentRepository]
 })
 export class TaskCommentModule {}

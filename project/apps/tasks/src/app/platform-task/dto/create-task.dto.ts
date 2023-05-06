@@ -68,6 +68,7 @@ export class CreateTaskDto {
   @IsOptional()
   @ArrayMaxSize(TaskSetting.TagsMaxAmount, {message: PlatformTaskValidationMessage.TagsAmountNotValid})
   @Length(TaskSetting.TagMinLength, TaskSetting.TagMaxLength, {each: true})
+  @Matches(/^[a-zA-Z][a-zA-Z\d]*[^ ]$/, {each: true})
   public tags?: string[];
 
   @ApiProperty({

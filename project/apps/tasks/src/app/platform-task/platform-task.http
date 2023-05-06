@@ -1,7 +1,7 @@
 #Create a new task
 POST http://localhost:3333/api/tasks HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODMzOTk4NDksImV4cCI6MTY4MzQwMDQ0OX0.03VWTnbY9BrUHLt5aUbV6gQROhNGXUkmGH7bYidyiCM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM0MTA0MzksImV4cCI6MTY4MzQxMTAzOX0.7uW-rwxIzDubHWNvnMcoLxoqVAsj3_aezAdttbH028w
 
 {
   "title": "Клининг большого помещения",
@@ -11,7 +11,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhM
   "city": "Moscow",
   "tags": [
     "Clining",
-    "Home"
+    "Home",
+    "Web",
+    "Program",
+    "Program"
   ]
 }
 
@@ -23,16 +26,18 @@ GET http://localhost:3333/api/tasks/2 HTTP/1.1
 ###
 
 # Delete task by ID
-DELETE http://localhost:3333/api/tasks/8 HTTP/1.1
+DELETE http://localhost:3333/api/tasks/20 HTTP/1.1
+//Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM0MTQwMzUsImV4cCI6MTY4MzQxNDYzNX0.wVjQo0OpBOy46GGU4ohoohMzs_c5SBcphC_gpo-Mqmk
 
 ###
 
 # Update task by ID
-PATCH http://localhost:3333/api/tasks/7 HTTP/1.1
+PATCH http://localhost:3333/api/tasks/30 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM0MTI1ODEsImV4cCI6MTY4MzQxMzE4MX0.16wRucenk7H127aw7Mb6rtNWZJvb_-6e2oFEopu-Ri8
 
 {
-  "city": "Vladivostok"
+  "city": "Moscow"
 }
 
 ###

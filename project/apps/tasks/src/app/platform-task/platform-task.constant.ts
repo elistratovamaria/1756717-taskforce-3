@@ -28,7 +28,9 @@ export const DEFAULT_TASK_COUNT_LIMIT = 25;
 export const DEFAULT_SORT_DIRECTION = 'desc';
 
 export const enum TaskException {
-  ChangeStatusRight = 'You do not have enough right to change status',
+  ChangeStatusRight = 'The user does not have enough right to change status',
   IncorrectChangeStatus = 'The status should be change only from new to inprogress or cancelled and from inprogress to done or failed',
-  Unauthorized = 'The user is unauthorized'
+  Unauthorized = 'The user is unauthorized',
+  Forbidden = 'The user does not have enough rights for this action',
+  NotExisted = 'The task is not existed'
 }

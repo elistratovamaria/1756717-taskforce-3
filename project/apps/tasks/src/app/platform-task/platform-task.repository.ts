@@ -49,7 +49,7 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
   }
 
   public async findById(taskId: number): Promise<Task | null> {
-    return this.prisma.task.findFirst({
+    return await this.prisma.task.findFirst({
       where: {
         taskId
       },

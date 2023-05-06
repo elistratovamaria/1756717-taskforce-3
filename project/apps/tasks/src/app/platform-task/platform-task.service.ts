@@ -8,14 +8,33 @@ import { PlatformTaskEntity } from './platform-task.entity';
 import { TaskQuery } from './query/task.query';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskException } from './platform-task.constant';
+import { JwtService } from '@nestjs/jwt';
+import { TaskCommentRepository } from '../task-comment/task-comment.repository';
 
 @Injectable()
 export class PlatformTaskService {
   constructor(
     private readonly platformTaskRepository: PlatformTaskRepository,
+    private readonly taskCommentRepository: TaskCommentRepository,
+    private readonly jwtService: JwtService,
   ) {}
 
-  public async createTask(dto: CreateTaskDto, tokenPayload?: AccessTokenPayload): Promise<Task> {
+  public async createTask(dto: CreateTaskDto, token?: string): Promise<Task> {
+    const user = this.jwtService.decode(token);
+
+    if (!token) {
+      throw new UnauthorizedException(TaskException.Unauthorized);
+    }
+
+    if (user['role'] !== UserRole.Customer) {
+      throw new ForbiddenException(TaskException.Forbidden);
+    }
+
+    if (dto.tags) {
+      const tags = dto.tags.map((tag) => tag.toLowerCase());
+      dto.tags = [...new Set(tags)];
+    }
+
     const task = {
       ...dto,
       price: dto.price ?? 0,
@@ -24,7 +43,7 @@ export class PlatformTaskService {
       address: dto.address ?? '',
       tags: dto.tags ?? [],
       status: StatusTask.New,
-      userId: tokenPayload.id,
+      userId: user['sub'],
       hasResponse: false,
       replies: []
     };
@@ -38,16 +57,57 @@ export class PlatformTaskService {
     return await this.platformTaskRepository.findById(id);
   }
 
-  public async deleteTask(id: number): Promise<void> {
-    await this.platformTaskRepository.destroy(id);
+  public async deleteTask(id: number, token?: string): Promise<void> {
+    const user = this.jwtService.decode(token);
+    const task = await this.platformTaskRepository.findById(id);
+
+    if (!task) {
+      throw new BadRequestException(TaskException.NotExisted);
+    }
+
+    if (!token) {
+      throw new UnauthorizedException(TaskException.Unauthorized);
+    }
+
+    if (user['role'] !== UserRole.Customer) {
+      throw new ForbiddenException(TaskException.Forbidden);
+    }
+
+    if (user['sub'] !== task.userId) {
+      throw new ForbiddenException(TaskException.Forbidden);
+    }
+
+    if (task.comments?.length > 0) {
+      this.taskCommentRepository.destroyByTaskId(id);
+    }
+
+    this.platformTaskRepository.destroy(id);
   }
 
   public async getTasks(query: TaskQuery): Promise<Task[]> {
     return this.platformTaskRepository.find(query);
   }
 
-  public async updateTask(id: number, dto: UpdateTaskDto) {
+  public async updateTask(id: number, dto: UpdateTaskDto, token?: string) {
+    const user = this.jwtService.decode(token);
     const task = await this.platformTaskRepository.findById(id);
+
+    if (!task) {
+      throw new BadRequestException(TaskException.NotExisted);
+    }
+
+    if (!token) {
+      throw new UnauthorizedException(TaskException.Unauthorized);
+    }
+
+    if (user['role'] !== UserRole.Customer) {
+      throw new ForbiddenException(TaskException.Forbidden);
+    }
+
+    if (user['sub'] !== task.userId) {
+      throw new ForbiddenException(TaskException.Forbidden);
+    }
+
     const taskEntity = new PlatformTaskEntity({...task, ...dto});
 
     return this.platformTaskRepository.update(id, taskEntity);
