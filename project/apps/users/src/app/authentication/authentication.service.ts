@@ -32,7 +32,7 @@ export class AuthenticationService {
     const platformUser = {
       name, email, city, role,
       avatar: '', dateBirth: dayjs(dateBirth).toDate(),
-      passwordHash: '', info: '', speciality: []
+      passwordHash: '', info: '', specialties: []
     };
 
     const existUser = await this.platformUserRepository
@@ -78,9 +78,9 @@ export class AuthenticationService {
       throw new NotFoundException(AuthUser.NotFound);
     }
 
-    if (dto.speciality) {
-      const speciality = dto.speciality.map((spec) => spec.toLowerCase());
-      dto.speciality = [...new Set(speciality)];
+    if (dto.specialties) {
+      const specialties = dto.specialties.map((spec) => spec.toLowerCase());
+      dto.specialties = [...new Set(specialties)];
     }
 
     const userEntity = new PlatformUserEntity({ ...user, ...dto });

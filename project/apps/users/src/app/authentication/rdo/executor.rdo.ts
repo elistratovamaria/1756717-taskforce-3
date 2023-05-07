@@ -85,7 +85,7 @@ export class ExecutorRdo {
     example: ['webdev', 'technical writer']
   })
   @Expose()
-  public speciality: string[];
+  public specialties: string[];
 
   @ApiProperty({
     description: 'User place in the rating',

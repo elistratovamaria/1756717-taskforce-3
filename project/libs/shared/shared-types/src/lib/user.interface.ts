@@ -13,5 +13,5 @@ export interface User extends CustomerUser, ExecutorUser{
   avatar?: string;
   dateBirth: Date;
   info?: string;
-  speciality?: string[];
+  specialties?: string[];
 }

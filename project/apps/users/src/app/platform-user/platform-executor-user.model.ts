@@ -33,7 +33,7 @@ export class PlatformExecutorUserModel extends Document implements ExecutorUser 
   @Prop({
     default: '',
   })
-  public speciality?: string[];
+  public specialties?: string[];
 
   @Prop({
     default: 0,

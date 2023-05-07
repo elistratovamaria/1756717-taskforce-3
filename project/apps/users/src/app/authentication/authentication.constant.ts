@@ -14,8 +14,8 @@ export const enum AuthUserValidationMessage {
   DateBirthNotValid = 'The date of birth is not valid',
   DateBirthMinor = 'User should be older than 18',
   InfoNotValid = 'Info should be less than 300 symbols',
-  SpecialityAmount = 'There should be less than 5 specialities',
-  SpecialityUnique = 'All specialities should be unique',
+  SpecialtiesAmount = 'There should be less than 5 specialities',
+  SpecialtiesUnique = 'All specialities should be unique',
 }
 
 export const enum UserSetting {
@@ -25,5 +25,5 @@ export const enum UserSetting {
   PasswordMaxLength = 12,
   InfoMaxLength = 300,
   MinimumAge = 18,
-  SpecialityMaxAmount = 5
+  SpecialtiesMaxAmount = 5
 }

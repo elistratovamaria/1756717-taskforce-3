@@ -38,7 +38,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ExZ
   "name": "Mary",
   "city": "Vladivostok",
   "info": "Супер классный!",
-  "speciality": [
+  "specialties": [
     "HTML",
     "CSS",
     "WebDev",

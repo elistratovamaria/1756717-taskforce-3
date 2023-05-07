@@ -4,6 +4,6 @@ export interface ExecutorUser {
   tasksDoneAmount?: number;
   tasksFailedAmount?: number;
   info?: string;
-  speciality?: string[];
+  specialties?: string[];
   placeInRating?: number;
 }

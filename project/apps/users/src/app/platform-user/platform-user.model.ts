@@ -55,7 +55,7 @@ export class PlatformUserModel extends Document implements User {
   @Prop({
     default: [],
   })
-  public speciality: string[];
+  public specialties: string[];
 }
 
 export const PlatformUserSchema = SchemaFactory.createForClass(PlatformUserModel);

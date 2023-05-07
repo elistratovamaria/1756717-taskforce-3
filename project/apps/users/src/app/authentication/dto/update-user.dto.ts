@@ -41,10 +41,10 @@ export class UpdateUserDto {
   public info: string;
 
   @ApiProperty({
-    description: 'User speciality',
+    description: 'User specialties',
     example: 'Webdev, PHP, Laravel'
   })
   @IsOptional()
-  @ArrayMaxSize(UserSetting.SpecialityMaxAmount, {message: AuthUserValidationMessage.SpecialityAmount})
-  public speciality: string[];
+  @ArrayMaxSize(UserSetting.SpecialtiesMaxAmount, {message: AuthUserValidationMessage.SpecialtiesAmount})
+  public specialties: string[];
 }
