@@ -10,6 +10,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskException } from './platform-task.constant';
 import { JwtService } from '@nestjs/jwt';
 import { TaskCommentRepository } from '../task-comment/task-comment.repository';
+import { TaskReplyService } from '../task-reply/task-reply.service';
 
 @Injectable()
 export class PlatformTaskService {
@@ -17,6 +18,7 @@ export class PlatformTaskService {
     private readonly platformTaskRepository: PlatformTaskRepository,
     private readonly taskCommentRepository: TaskCommentRepository,
     private readonly jwtService: JwtService,
+    private readonly taskReplyService: TaskReplyService
   ) {}
 
   public async createTask(dto: CreateTaskDto, token?: string): Promise<Task> {
@@ -142,5 +144,28 @@ export class PlatformTaskService {
     } else {
       throw new BadRequestException(TaskException.IncorrectChangeStatus);
     }
+  }
+
+  public async putReply(id: number, token?: string) {
+    const user = this.jwtService.decode(token);
+    const task = await this.platformTaskRepository.findById(id);
+
+    if (!task) {
+      throw new BadRequestException(TaskException.NotExisted);
+    }
+
+    if (!token) {
+      throw new UnauthorizedException(TaskException.Unauthorized);
+    }
+
+    if (user['role'] !== UserRole.Executor) {
+      throw new ForbiddenException(TaskException.Forbidden);
+    }
+
+    if (task.status !== StatusTask.New) {
+      throw new ForbiddenException(TaskException.TaskNotNew);
+    }
+
+    return this.taskReplyService.createReply(id, user['sub']);
   }
 }

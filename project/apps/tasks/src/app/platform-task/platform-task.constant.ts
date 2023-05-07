@@ -32,5 +32,6 @@ export const enum TaskException {
   IncorrectChangeStatus = 'The status should be change only from new to inprogress or cancelled and from inprogress to done or failed. Only the executor can change status to failed',
   Unauthorized = 'The user is unauthorized',
   Forbidden = 'The user does not have enough rights for this action',
-  NotExisted = 'The task is not existed'
+  NotExisted = 'The task is not existed',
+  TaskNotNew = 'The reply can be made only for the task with status NEW'
 }
