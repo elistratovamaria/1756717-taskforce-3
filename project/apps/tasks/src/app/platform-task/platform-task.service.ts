@@ -168,4 +168,31 @@ export class PlatformTaskService {
 
     return this.taskReplyService.createReply(id, user['sub']);
   }
+
+  public async chooseExecutor(id: number, executorId: string, token?: string) {
+    const user = this.jwtService.decode(token);
+    const task = await this.platformTaskRepository.findById(id);
+
+    if (!task) {
+      throw new BadRequestException(TaskException.NotExisted);
+    }
+
+    if (!token) {
+      throw new UnauthorizedException(TaskException.Unauthorized);
+    }
+
+    if (user['role'] !== UserRole.Customer) {
+      throw new ForbiddenException(TaskException.Forbidden);
+    }
+
+    const replies = await this.taskReplyService.getRepliesByTask(id);
+    const candidats = replies.map((reply) => reply.userId);
+
+    if (!candidats.includes(executorId)) {
+      throw new BadRequestException(TaskException.NotExecutorReply);
+    }
+    const taskEntity = new PlatformTaskEntity({...task, executorId});
+
+    return this.platformTaskRepository.update(id, taskEntity);
+  }
 }

@@ -33,5 +33,6 @@ export const enum TaskException {
   Unauthorized = 'The user is unauthorized',
   Forbidden = 'The user does not have enough rights for this action',
   NotExisted = 'The task is not existed',
-  TaskNotNew = 'The reply can be made only for the task with status NEW'
+  TaskNotNew = 'The reply can be made only for the task with status NEW',
+  NotExecutorReply = 'This executor did not put the reply for this task'
 }

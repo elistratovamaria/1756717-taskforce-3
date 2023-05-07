@@ -26,7 +26,7 @@ GET http://localhost:3333/api/tasks/2 HTTP/1.1
 ###
 
 # Delete task by ID
-DELETE http://localhost:3333/api/tasks/21 HTTP/1.1
+DELETE http://localhost:3333/api/tasks/22 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM0MTQwMzUsImV4cCI6MTY4MzQxNDYzNX0.wVjQo0OpBOy46GGU4ohoohMzs_c5SBcphC_gpo-Mqmk
 
 ###
@@ -55,8 +55,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhM
 ###
 
 # Put a reply
-POST http://localhost:3333/api/tasks/22/reply HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM0MTQwMzUsImV4cCI6MTY4MzQxNDYzNX0.wVjQo0OpBOy46GGU4ohoohMzs_c5SBcphC_gpo-Mqmk
+POST http://localhost:3333/api/tasks/23/reply HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM0NzIzMDEsImV4cCI6MTY4MzQ3MjkwMX0.HWw6pGZ-4KBpcRM3UlCyppOuf-Tc5lBULXDX58AWYpA
+
+###
+
+# Choose an executor
+PATCH  http://localhost:3333/api/tasks/23/6457bf7b2d75f5c87f8b764d/reply HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM0NzU4NzQsImV4cCI6MTY4MzQ3NjQ3NH0.4ilzVOj747f_SE3IQUfy3FPw3nXFSPPWPlRBQMKyWdY
 
 ###
 
