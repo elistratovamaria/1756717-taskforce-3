@@ -29,7 +29,7 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
           create: [],
         },
         hasResponse: entityData.hasResponse,
-        replies:  {
+        replies: {
           create: []
         }
       },
@@ -113,5 +113,15 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
         category: true,
       }
     });
+  }
+
+  public async checkExecutorInWork(userId: string): Promise<boolean> {
+    const tasksInProgress = await this.prisma.task.findMany({
+      where: {
+        status: 'InProgress'
+      }
+    });
+    const executorsInWork = tasksInProgress.map((task) => task.executorId);
+    return executorsInWork.includes(userId);
   }
 }

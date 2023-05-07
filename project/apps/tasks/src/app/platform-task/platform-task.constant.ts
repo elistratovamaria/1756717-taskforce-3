@@ -34,5 +34,7 @@ export const enum TaskException {
   Forbidden = 'The user does not have enough rights for this action',
   NotExisted = 'The task is not existed',
   TaskNotNew = 'The reply can be made only for the task with status NEW',
-  NotExecutorReply = 'This executor did not put the reply for this task'
+  NotExecutorReply = 'This executor did not put the reply for this task',
+  NotChooseExecutor = 'To set status to inProgress the user should choose the executor',
+  ExecutorBusy = 'The executor has tasks in work and cannot be chosen'
 }

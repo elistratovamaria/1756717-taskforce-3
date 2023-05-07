@@ -87,4 +87,11 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsEnum(StatusTask, { message: PlatformTaskValidationMessage.StatusNotValid })
   public status?: StatusTask;
+
+  @ApiProperty({
+    description: 'ExecutorId',
+    example: ' 6457ccd22d75f5c87f8b7657'
+  })
+  @IsOptional()
+  public executorId?: string;
 }

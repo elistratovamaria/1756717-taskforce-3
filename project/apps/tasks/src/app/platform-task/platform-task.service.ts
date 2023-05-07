@@ -19,7 +19,7 @@ export class PlatformTaskService {
     private readonly taskCommentRepository: TaskCommentRepository,
     private readonly jwtService: JwtService,
     private readonly taskReplyService: TaskReplyService
-  ) {}
+  ) { }
 
   public async createTask(dto: CreateTaskDto, token?: string): Promise<Task> {
     const user = this.jwtService.decode(token);
@@ -110,7 +110,7 @@ export class PlatformTaskService {
       throw new ForbiddenException(TaskException.Forbidden);
     }
 
-    const taskEntity = new PlatformTaskEntity({...task, ...dto});
+    const taskEntity = new PlatformTaskEntity({ ...task, ...dto });
 
     return this.platformTaskRepository.update(id, taskEntity);
   }
@@ -118,7 +118,7 @@ export class PlatformTaskService {
   public async changeStatus(id: number, dto: UpdateTaskDto, token?: string) {
     const user = this.jwtService.decode(token);
     const task = await this.platformTaskRepository.findById(id);
-    const taskEntity = new PlatformTaskEntity({...task, ...dto});
+    const taskEntity = new PlatformTaskEntity({ ...task, ...dto });
 
     if (!task) {
       throw new BadRequestException(TaskException.NotExisted);
@@ -128,18 +128,33 @@ export class PlatformTaskService {
       throw new UnauthorizedException(TaskException.Unauthorized);
     }
 
-    if ((task.userId !==  user['sub']) && (task.executorId !== user['sub'])) {
+    if ((task.userId !== user['sub']) && (task.executorId !== user['sub'])) {
       throw new ForbiddenException(TaskException.ChangeStatusRight);
     }
 
     if ((user['role'] === UserRole.Customer) && (task.status === StatusTask.New) && (dto.status === StatusTask.Cancelled)) {
       return this.platformTaskRepository.update(id, taskEntity);
     } else if ((user['role'] === UserRole.Customer) && (task.status === StatusTask.New) && (dto.status === StatusTask.InProgress)) {
-      //добавить выбор исполнителя
+      if (!dto.executorId) {
+        throw new BadRequestException(TaskException.NotChooseExecutor);
+      }
+      const replies = await this.taskReplyService.getRepliesByTask(id);
+      const candidats = replies.map((reply) => reply.userId);
+
+      if (!candidats.includes(dto.executorId)) {
+        throw new BadRequestException(TaskException.NotExecutorReply);
+      }
+
+      const isExecutorBusy = await this.platformTaskRepository.checkExecutorInWork(dto.executorId);
+
+      if (isExecutorBusy) {
+        throw new BadRequestException(TaskException.ExecutorBusy);
+      }
+
       return this.platformTaskRepository.update(id, taskEntity);
     } else if ((user['role'] === UserRole.Customer) && (task.status === StatusTask.InProgress) && (dto.status === StatusTask.Done)) {
       return this.platformTaskRepository.update(id, taskEntity);
-    } else  if ((user['role'] === UserRole.Executor) && (task.status === StatusTask.InProgress) && (dto.status === StatusTask.Failed)) {
+    } else if ((user['role'] === UserRole.Executor) && (task.status === StatusTask.InProgress) && (dto.status === StatusTask.Failed)) {
       return this.platformTaskRepository.update(id, taskEntity);
     } else {
       throw new BadRequestException(TaskException.IncorrectChangeStatus);
@@ -167,32 +182,5 @@ export class PlatformTaskService {
     }
 
     return this.taskReplyService.createReply(id, user['sub']);
-  }
-
-  public async chooseExecutor(id: number, executorId: string, token?: string) {
-    const user = this.jwtService.decode(token);
-    const task = await this.platformTaskRepository.findById(id);
-
-    if (!task) {
-      throw new BadRequestException(TaskException.NotExisted);
-    }
-
-    if (!token) {
-      throw new UnauthorizedException(TaskException.Unauthorized);
-    }
-
-    if (user['role'] !== UserRole.Customer) {
-      throw new ForbiddenException(TaskException.Forbidden);
-    }
-
-    const replies = await this.taskReplyService.getRepliesByTask(id);
-    const candidats = replies.map((reply) => reply.userId);
-
-    if (!candidats.includes(executorId)) {
-      throw new BadRequestException(TaskException.NotExecutorReply);
-    }
-    const taskEntity = new PlatformTaskEntity({...task, executorId});
-
-    return this.platformTaskRepository.update(id, taskEntity);
   }
 }

@@ -7,7 +7,6 @@ import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { TaskQuery } from './query/task.query';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskReplyRdo } from '../task-reply/rdo/reply.rdo';
-import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -158,28 +157,5 @@ export class PlatformTaskController {
     const token = authorization?.split(' ')[1];
     const reply = await this.taskService.putReply(id, token);
     return fillObject(TaskReplyRdo, reply);
-  }
-
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'The reply has been successfully created'
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Task with this ID does not exist'
-  })
-  @ApiResponse({
-    status: HttpStatus.FORBIDDEN,
-    description: 'User does not have enough rights to add a reply'
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'The user is not authorized'
-  })
-  @Patch('/:id/:executorId/reply')
-  public async chooseExecutor(@Param('id') id: number, @Param('executorId', MongoidValidationPipe) executorId: string, @Headers('authorization') authorization?: string) {
-    const token = authorization?.split(' ')[1];
-    const updatedTask = await this.taskService.chooseExecutor(id, executorId, token);
-    return fillObject(TaskRdo, updatedTask);
   }
 }
