@@ -21,7 +21,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhM
 ###
 
 # Get task by ID
-GET http://localhost:3333/api/tasks/2 HTTP/1.1
+GET http://localhost:3333/api/tasks/25 HTTP/1.1
 
 ###
 
