@@ -2,7 +2,7 @@ import { Expose, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { Category } from '@project/shared/shared-types';
 
-export class TaskRdo {
+export class TaskInListRdo {
   @ApiProperty({
     description: 'The unique task ID',
     example: 234
@@ -80,4 +80,32 @@ export class TaskRdo {
   })
   @Expose()
   public status: string;
+
+  @ApiProperty({
+    description: 'User Id',
+    example: '6457ccd22d75f5c87f8b7657'
+  })
+  @Expose()
+  public userId: string;
+
+  @ApiProperty({
+    description: 'Date when the task was created',
+    example: '2023-05-07'
+  })
+  @Expose()
+  public createdAt: Date;
+
+  @ApiProperty({
+    description: 'Comments amount',
+    example: 20
+  })
+  @Expose()
+  public commentsAmount: number;
+
+  @ApiProperty({
+    description: 'Replies amount',
+    example: 20
+  })
+  @Expose()
+  public repliesAmount: number;
 }

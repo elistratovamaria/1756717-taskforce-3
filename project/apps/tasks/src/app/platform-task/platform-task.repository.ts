@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CRUDRepository } from '@project/util/util-types';
 import { PlatformTaskEntity } from './platform-task.entity';
-import { City, StatusTask, Task } from '@project/shared/shared-types';
+import { City, SortType, StatusTask, Task } from '@project/shared/shared-types';
 import { PrismaService } from '../prisma/prisma.service';
 import { TaskQuery } from './query/task.query';
 
@@ -35,7 +35,7 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
       },
       include: {
         category: true,
-        replies: true
+        replies: true,
       }
     });
   }
@@ -49,6 +49,7 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
   }
 
   public async findById(taskId: number): Promise<Task | null> {
+
     return await this.prisma.task.findFirst({
       where: {
         taskId
@@ -60,32 +61,99 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
     });
   }
 
-  public async find({ limit, category, tag, city, sortDirection, page }: TaskQuery): Promise<Task[]> {
-    return await this.prisma.task.findMany({
-      where: {
-        category: {
-          is: {
-            categoryId: category.categoryId,
-          },
+  public async find({ limit, category, tag, city, sortDirection, sortType, page }: TaskQuery): Promise<Task[]> {
+    let tasks: Task[];
+    if (sortType === SortType.Discussed) {
+      tasks = await this.prisma.task.findMany({
+        where: {
+          category: category,
+          tags: (() => {
+            if (!tag) {
+              return undefined;
+            }
+
+            return {
+              hasSome: tag,
+            };
+          })(),
+          city: city,
+          status: 'New',
         },
-        tags: {
-          has: tag,
+        take: limit,
+        include: {
+          comments: true,
+          category: true,
+          replies: true
         },
-        city: {
-          equals: city,
-        }
-      },
-      take: limit,
-      include: {
-        comments: true,
-        category: true,
-        replies: true
-      },
-      orderBy: [
-        { createdAt: sortDirection }
-      ],
-      skip: page > 0 ? limit * (page - 1) : undefined,
-    });
+        orderBy: {
+          comments: {
+            _count: sortDirection
+          }
+        },
+        skip: page > 0 ? limit * (page - 1) : undefined,
+      });
+    } else if (sortType === SortType.Responsed) {
+      tasks = await this.prisma.task.findMany({
+        where: {
+          category: category,
+          tags: (() => {
+            if (!tag) {
+              return undefined;
+            }
+
+            return {
+              hasSome: tag,
+            };
+          })(),
+          city: city,
+          status: 'New'
+        },
+        take: limit,
+        include: {
+          comments: true,
+          category: true,
+          replies: true
+        },
+        orderBy: {
+          replies: {
+            _count: sortDirection
+          }
+        },
+        skip: page > 0 ? limit * (page - 1) : undefined,
+      });
+    } else {
+      tasks = await this.prisma.task.findMany({
+        where: {
+          category: category,
+          tags: (() => {
+            if (!tag) {
+              return undefined;
+            }
+
+            return {
+              hasSome: tag,
+            };
+          })(),
+          city: city,
+          status: 'New'
+        },
+        take: limit,
+        include: {
+          comments: true,
+          category: true,
+          replies: true
+        },
+        orderBy: [
+          { createdAt: sortDirection }
+        ],
+        skip: page > 0 ? limit * (page - 1) : undefined,
+      });
+    }
+    return tasks.map((task) => ({
+      ...task,
+      commentsAmount: task.comments.length,
+      repliesAmount: task.replies.length
+    }));
   }
 
   public async update(taskId: number, item: PlatformTaskEntity): Promise<Task> {

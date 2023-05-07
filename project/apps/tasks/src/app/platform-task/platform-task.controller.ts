@@ -7,6 +7,7 @@ import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { TaskQuery } from './query/task.query';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskReplyRdo } from '../task-reply/rdo/reply.rdo';
+import { TaskInListRdo } from './rdo/task-in-list.rdo';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -74,14 +75,23 @@ export class PlatformTaskController {
 
 
   @ApiResponse({
-    type: TaskRdo,
+    type: TaskInListRdo,
     status: HttpStatus.OK,
     description: 'Tasks found'
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'The user does not have enough rights to see new tasks'
+  })
   @Get('/')
-  async index(@Query() query: TaskQuery) {
-    const tasks = await this.taskService.getTasks(query);
-    return fillObject(TaskRdo, tasks);
+  async index(@Query() query: TaskQuery, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const tasks = await this.taskService.getNewTasks(query, token);
+    return fillObject(TaskInListRdo, tasks);
   }
 
   @ApiResponse({

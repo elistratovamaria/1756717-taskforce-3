@@ -24,7 +24,7 @@ export class PlatformTaskService {
   public async createTask(dto: CreateTaskDto, token?: string): Promise<Task> {
     const user = this.jwtService.decode(token);
 
-    if (!token) {
+    if (!user) {
       throw new UnauthorizedException(TaskException.Unauthorized);
     }
 
@@ -67,7 +67,7 @@ export class PlatformTaskService {
       throw new BadRequestException(TaskException.NotExisted);
     }
 
-    if (!token) {
+    if (!user) {
       throw new UnauthorizedException(TaskException.Unauthorized);
     }
 
@@ -86,7 +86,17 @@ export class PlatformTaskService {
     this.platformTaskRepository.destroy(id);
   }
 
-  public async getTasks(query: TaskQuery): Promise<Task[]> {
+  public async getNewTasks(query: TaskQuery, token?: string): Promise<Task[]> {
+    const user = this.jwtService.decode(token);
+
+    if (!user) {
+      throw new UnauthorizedException(TaskException.Unauthorized);
+    }
+
+    if (user['role'] !== UserRole.Executor) {
+      throw new ForbiddenException(TaskException.Forbidden);
+    }
+
     return this.platformTaskRepository.find(query);
   }
 
@@ -98,7 +108,7 @@ export class PlatformTaskService {
       throw new BadRequestException(TaskException.NotExisted);
     }
 
-    if (!token) {
+    if (!user) {
       throw new UnauthorizedException(TaskException.Unauthorized);
     }
 
@@ -108,6 +118,11 @@ export class PlatformTaskService {
 
     if (user['sub'] !== task.userId) {
       throw new ForbiddenException(TaskException.Forbidden);
+    }
+
+    if (dto.tags) {
+      const tags = dto.tags.map((tag) => tag.toLowerCase());
+      dto.tags = [...new Set(tags)];
     }
 
     const taskEntity = new PlatformTaskEntity({ ...task, ...dto });
@@ -124,7 +139,7 @@ export class PlatformTaskService {
       throw new BadRequestException(TaskException.NotExisted);
     }
 
-    if (!token) {
+    if (!user) {
       throw new UnauthorizedException(TaskException.Unauthorized);
     }
 
@@ -169,7 +184,7 @@ export class PlatformTaskService {
       throw new BadRequestException(TaskException.NotExisted);
     }
 
-    if (!token) {
+    if (!user) {
       throw new UnauthorizedException(TaskException.Unauthorized);
     }
 

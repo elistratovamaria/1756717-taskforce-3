@@ -1,3 +1,5 @@
+import { SortType } from "@project/shared/shared-types";
+
 export const enum PlatformTaskValidationMessage {
   TitleNotValid = 'Title should have from 20 to 50 symbols',
   DescriptionNotValid = 'Description should have from 100 to 1024 symbols',
@@ -26,6 +28,7 @@ export const enum TaskSetting {
 
 export const DEFAULT_TASK_COUNT_LIMIT = 25;
 export const DEFAULT_SORT_DIRECTION = 'desc';
+export const DEFAULT_SORT_TYPE = SortType.CreatedAt;
 
 export const enum TaskException {
   ChangeStatusRight = 'The user does not have enough right to change status',
