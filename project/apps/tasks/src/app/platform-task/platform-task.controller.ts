@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Param, HttpStatus, Delete, Query, Patch, Req, Headers} from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, HttpStatus, Delete, Query, Patch, Headers} from '@nestjs/common';
 import { PlatformTaskService } from './platform-task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { fillObject } from '@project/util/util-core';
@@ -6,7 +6,6 @@ import { TaskRdo } from './rdo/task.rdo';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { TaskQuery } from './query/task.query';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { RequestWithIdUser } from '@project/shared/shared-types';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -125,9 +124,14 @@ export class PlatformTaskController {
     status: HttpStatus.BAD_REQUEST,
     description: 'Incorrect status changing'
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
   @Patch('/:id/status')
-  public async changeStatus(@Param('id') id: number, @Body() dto: UpdateTaskDto, @Req() request?: RequestWithIdUser) {
-    const updatedTask = await this.taskService.changeStatus(id, dto, request);
+  public async changeStatus(@Param('id') id: number, @Body() dto: UpdateTaskDto, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const updatedTask = await this.taskService.changeStatus(id, dto, token);
     return fillObject(TaskRdo, updatedTask);
   }
 }

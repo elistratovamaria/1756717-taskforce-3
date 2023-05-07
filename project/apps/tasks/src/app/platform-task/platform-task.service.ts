@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { AccessTokenPayload, StatusTask, UserRole } from '@project/shared/shared-types';
+import { StatusTask, UserRole } from '@project/shared/shared-types';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task } from '@project/shared/shared-types';
 import { PlatformTaskRepository } from './platform-task.repository';
@@ -113,26 +113,31 @@ export class PlatformTaskService {
     return this.platformTaskRepository.update(id, taskEntity);
   }
 
-  public async changeStatus(id: number, dto: UpdateTaskDto, tokenPayload?: AccessTokenPayload) {
+  public async changeStatus(id: number, dto: UpdateTaskDto, token?: string) {
+    const user = this.jwtService.decode(token);
     const task = await this.platformTaskRepository.findById(id);
     const taskEntity = new PlatformTaskEntity({...task, ...dto});
 
-    if (!tokenPayload) {
+    if (!task) {
+      throw new BadRequestException(TaskException.NotExisted);
+    }
+
+    if (!token) {
       throw new UnauthorizedException(TaskException.Unauthorized);
     }
 
-    if ((task.userId !==  tokenPayload.id) && (task.executorId !== tokenPayload.id)) {
+    if ((task.userId !==  user['sub']) && (task.executorId !== user['sub'])) {
       throw new ForbiddenException(TaskException.ChangeStatusRight);
     }
 
-    if ((tokenPayload.role === UserRole.Customer) && (task.status === StatusTask.New) && (dto.status === StatusTask.Cancelled)) {
+    if ((user['role'] === UserRole.Customer) && (task.status === StatusTask.New) && (dto.status === StatusTask.Cancelled)) {
       return this.platformTaskRepository.update(id, taskEntity);
-    } else if ((tokenPayload.role === UserRole.Customer) && (task.status === StatusTask.New) && (dto.status === StatusTask.InProgress)) {
+    } else if ((user['role'] === UserRole.Customer) && (task.status === StatusTask.New) && (dto.status === StatusTask.InProgress)) {
       //добавить выбор исполнителя
       return this.platformTaskRepository.update(id, taskEntity);
-    } else if ((tokenPayload.role === UserRole.Customer) && (task.status === StatusTask.InProgress) && (dto.status === StatusTask.Done)) {
+    } else if ((user['role'] === UserRole.Customer) && (task.status === StatusTask.InProgress) && (dto.status === StatusTask.Done)) {
       return this.platformTaskRepository.update(id, taskEntity);
-    } else  if ((tokenPayload.role === UserRole.Executor) && (task.status === StatusTask.InProgress) && (dto.status === StatusTask.Failed)) {
+    } else  if ((user['role'] === UserRole.Executor) && (task.status === StatusTask.InProgress) && (dto.status === StatusTask.Failed)) {
       return this.platformTaskRepository.update(id, taskEntity);
     } else {
       throw new BadRequestException(TaskException.IncorrectChangeStatus);

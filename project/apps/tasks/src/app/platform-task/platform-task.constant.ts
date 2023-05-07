@@ -29,7 +29,7 @@ export const DEFAULT_SORT_DIRECTION = 'desc';
 
 export const enum TaskException {
   ChangeStatusRight = 'The user does not have enough right to change status',
-  IncorrectChangeStatus = 'The status should be change only from new to inprogress or cancelled and from inprogress to done or failed',
+  IncorrectChangeStatus = 'The status should be change only from new to inprogress or cancelled and from inprogress to done or failed. Only the executor can change status to failed',
   Unauthorized = 'The user is unauthorized',
   Forbidden = 'The user does not have enough rights for this action',
   NotExisted = 'The task is not existed'

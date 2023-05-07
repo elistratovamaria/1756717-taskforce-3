@@ -17,4 +17,3 @@ export * from './lib/token.interface';
 export * from './lib/executor-user.interface';
 export * from './lib/customer-user.interface';
 export * from './lib/reply.interface';
-export * from './lib/access-token.payload';
