@@ -22,8 +22,8 @@ GET http://localhost:3333/api/tasks/25 HTTP/1.1
 ###
 
 # Delete task by ID
-DELETE http://localhost:3333/api/tasks/24 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM0MTQwMzUsImV4cCI6MTY4MzQxNDYzNX0.wVjQo0OpBOy46GGU4ohoohMzs_c5SBcphC_gpo-Mqmk
+DELETE http://localhost:3333/api/tasks/4 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM1MTc2OTAsImV4cCI6MTY4MzUxODI5MH0.ZycEXtpi0IpEZGBebqq_ZhLlNO3pmK5nv5Ud9rFf5Tg
 
 ###
 

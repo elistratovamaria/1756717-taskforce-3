@@ -1,4 +1,4 @@
-import { Controller, Body, Post, Delete, Param, ParseIntPipe, HttpStatus, Get, Query } from '@nestjs/common';
+import { Controller, Body, Post, Delete, Param, ParseIntPipe, HttpStatus, Get, Query, Headers } from '@nestjs/common';
 import { TaskCommentService } from './task-comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { fillObject } from '@project/util/util-core';
@@ -22,9 +22,14 @@ export class TaskCommentController {
     status: HttpStatus.FORBIDDEN,
     description: 'User does not have enough rights to add a comment'
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
   @Post(':taskId')
-  public async create(@Body() dto: CreateCommentDto, @Param('taskId', ParseIntPipe) taskId: number) {
-    const newComment = await this.commentService.createComment(dto, taskId);
+  public async create(@Body() dto: CreateCommentDto, @Param('taskId', ParseIntPipe) taskId: number, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const newComment = await this.commentService.createComment(dto, taskId, token);
     return fillObject(TaskCommentRdo, newComment);
   }
 
@@ -33,29 +38,26 @@ export class TaskCommentController {
     description: 'The comment has been successfully deleted'
   })
   @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Comment with this ID does not exist'
-  })
-  @ApiResponse({
     status: HttpStatus.FORBIDDEN,
     description: 'The user does not have enough rights to delete the comment'
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
   @Delete(':id')
-  public async delete(@Param('id', ParseIntPipe) id: number) {
-    this.commentService.deleteComment(id);
+  public async delete(@Param('id', ParseIntPipe) id: number, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    await this.commentService.deleteComment(id, token);
   }
 
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
     description: 'The comments have been successfully deleted'
   })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Task with this ID does not exist'
-  })
   @Delete('tasks/:taskId')
   public async deleteByTaskId(@Param('taskId', ParseIntPipe) taskId: number) {
-    this.commentService.deleteCommentByTaskId(taskId);
+    await this.commentService.deleteCommentByTaskId(taskId);
   }
 
   @ApiResponse({

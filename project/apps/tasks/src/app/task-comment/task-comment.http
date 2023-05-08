@@ -1,26 +1,27 @@
 # Create a new comment
-POST http://localhost:3333/api/comments/4 HTTP/1.1
+POST http://localhost:3333/api/comments/1 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ExZjMzYmJlZThlYTM4MzAxMGUiLCJlbWFpbCI6Im1hcnlAZ21haWwuY29tIiwicm9sZSI6IkV4ZWN1dG9yIiwibmFtZSI6Ik1hcnkiLCJpYXQiOjE2ODM1MTczMzMsImV4cCI6MTY4MzUxNzkzM30.b2J5d-D4OWGVsWjMZjYizi7DmMzupEoj_UeHi4NB8OU
 
 {
   "message": "Легкое задание",
-  "taskId": 2,
-  "userId": "3"
+  "taskId": 1
 }
 
 ###
 
 # Delete comment by ID
-DELETE http://localhost:3333/api/comments/1 HTTP/1.1
+DELETE http://localhost:3333/api/comments/11 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ExZjMzYmJlZThlYTM4MzAxMGUiLCJlbWFpbCI6Im1hcnlAZ21haWwuY29tIiwicm9sZSI6IkV4ZWN1dG9yIiwibmFtZSI6Ik1hcnkiLCJpYXQiOjE2ODM1MTczMzMsImV4cCI6MTY4MzUxNzkzM30.b2J5d-D4OWGVsWjMZjYizi7DmMzupEoj_UeHi4NB8OU
 
 ###
 
 # Delete comments by task ID
-DELETE http://localhost:3333/api/comments/tasks/2 HTTP/1.1
+DELETE http://localhost:3333/api/comments/tasks/7 HTTP/1.1
 
 ###
 
 # Show comments
-GET http://localhost:3333/api/comments/2?limit=1&page=2 HTTP/1.1
+GET http://localhost:3333/api/comments/2?limit=2&page=2 HTTP/1.1
 
 ###

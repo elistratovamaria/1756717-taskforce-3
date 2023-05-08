@@ -8,3 +8,8 @@ export const enum TaskCommentSetting {
 }
 
 export const DEFAULT_COMMENT_COUNT_LIMIT = 50;
+
+export const enum TaskCommentException {
+  Unauthorized = 'The user is unauthorized',
+  Forbidden = 'The user does not have enough rights for this action',
+}

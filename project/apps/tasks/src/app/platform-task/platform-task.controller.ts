@@ -86,7 +86,7 @@ export class PlatformTaskController {
   @Delete('/:id')
   public async delete(@Param('id') id: number, @Headers('authorization') authorization?: string) {
     const token = authorization?.split(' ')[1];
-    this.taskService.deleteTask(id, token);
+    await this.taskService.deleteTask(id, token);
   }
 
 
