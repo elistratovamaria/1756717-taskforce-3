@@ -25,7 +25,13 @@ export class AuthenticationService {
     private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
-  public async register(dto: CreateUserDto) {
+  public async register(dto: CreateUserDto, token?: string) {
+    const user = this.jwtService.decode(token);
+
+    if (user) {
+      throw new ForbiddenException(AuthException.IsAuthorized);
+    }
+
     const {name, email, city, password, role, dateBirth} = dto;
 
     const platformUser = {

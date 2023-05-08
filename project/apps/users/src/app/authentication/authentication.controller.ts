@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards, Headers } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { fillObject } from '@project/util/util-core';
@@ -25,7 +25,6 @@ export class AuthenticationController {
     private readonly notifyService: NotifyService,
   ) { }
 
-  /** Создание нового пользователя */
   @ApiResponse({
     type: UserRdo,
     status: HttpStatus.CREATED,
@@ -36,8 +35,9 @@ export class AuthenticationController {
     description: 'The user with this email already exists'
   })
   @Post('register')
-  public async create(@Body() dto: CreateUserDto) {
-    const newUser = await this.authService.register(dto);
+  public async create(@Body() dto: CreateUserDto, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const newUser = await this.authService.register(dto, token);
     const { role } = newUser;
     return role === UserRole.Customer ? fillObject(CustomerRdo, newUser) : fillObject(ExecutorRdo, newUser);
   }
