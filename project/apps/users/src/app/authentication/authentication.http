@@ -18,9 +18,15 @@ POST http://localhost:3000/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "john@gmail.com",
+  "email": "vasya@gmail.com",
   "password": "123456"
 }
+
+###
+
+# Subscribe
+POST http://localhost:3000/api/auth/subscription/645906d80634aef7c9b1e53e HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU5MDZkODA2MzRhZWY3YzliMWU1M2UiLCJlbWFpbCI6InZhc3lhQGdtYWlsLmNvbSIsInJvbGUiOiJFeGVjdXRvciIsIm5hbWUiOiJWYXN5YSIsImlhdCI6MTY4MzU1Nzk4OCwiZXhwIjoxNjgzNTU4NTg4fQ.kGI43jlzUA8uoNCd147Pa4U7re96bYcgCiaOqM8xueg
 
 ###
 

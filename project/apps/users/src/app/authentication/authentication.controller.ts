@@ -38,12 +38,10 @@ export class AuthenticationController {
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.register(dto);
-    const { email, name, role } = newUser;
-    await this.notifyService.registerSubscriber({ email, name });
+    const { role } = newUser;
     return role === UserRole.Customer ? fillObject(CustomerRdo, newUser) : fillObject(ExecutorRdo, newUser);
   }
 
-  /** Авторизация пользователя */
   @UseGuards(LocalAuthGuard)
   @ApiResponse({
     type: LoggedUserRdo,
@@ -64,7 +62,23 @@ export class AuthenticationController {
     return this.authService.createUserToken(user);
   }
 
-  /** Получение информации о пользователе */
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    type: UserRdo,
+    status: HttpStatus.OK,
+    description: 'The subscription was successful'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User is not authorized'
+  })
+  @Post('/subscription/:id')
+  public async subscribe(@Param('id', MongoidValidationPipe) id: string) {
+    const existUser = await this.authService.getUser(id);
+    const { email, name } = existUser;
+    return await this.notifyService.registerSubscriber({ email, name });
+  }
+
   @ApiResponse({
     type: UserRdo,
     status: HttpStatus.OK,
@@ -80,7 +94,6 @@ export class AuthenticationController {
     return existUser.role === UserRole.Customer ? fillObject(CustomerRdo, existUser) : fillObject(ExecutorRdo, existUser);
   }
 
-  /** Изменение информации о пользователе */
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     type: ExecutorRdo,

@@ -1,13 +1,13 @@
-import { Injectable, ConflictException, Inject, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, ConflictException, Inject, NotFoundException, UnauthorizedException, ForbiddenException } from '@nestjs/common';
 import { PlatformUserRepository } from '../platform-user/platform-user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import dayjs from 'dayjs';
-import { AuthUser } from './authentication.constant';
+import { AuthException } from './authentication.constant';
 import { PlatformUserEntity } from '../platform-user/platform-user.entity';
-import { User } from '@project/shared/shared-types';
+import { User, UserRole } from '@project/shared/shared-types';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConfig } from '@project/config/config-users';
 import { RefreshTokenService } from '../refresh-token/refresh-token.service';
@@ -25,7 +25,6 @@ export class AuthenticationService {
     private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
-  /** Регистрация пользователя */
   public async register(dto: CreateUserDto) {
     const {name, email, city, password, role, dateBirth} = dto;
 
@@ -39,7 +38,7 @@ export class AuthenticationService {
       .findByEmail(email);
 
     if (existUser) {
-      throw new ConflictException(AuthUser.Exists);
+      throw new ConflictException(AuthException.Exists);
     }
 
     const userEntity = await new PlatformUserEntity(platformUser)
@@ -49,33 +48,44 @@ export class AuthenticationService {
       .create(userEntity);
   }
 
-  /** Авторизация пользователя */
   public async verifyUser(dto: LoginUserDto) {
     const {email, password} = dto;
     const existUser = await this.platformUserRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new NotFoundException(AuthUser.NotFound);
+      throw new NotFoundException(AuthException.NotFound);
     }
 
     const platformUserEntity = new PlatformUserEntity(existUser);
     if (!await platformUserEntity.comparePassword(password)) {
-      throw new UnauthorizedException(AuthUser.PasswordWrong);
+      throw new UnauthorizedException(AuthException.PasswordWrong);
     }
 
     return platformUserEntity.toObject();
   }
 
-  /** Получение данных о пользователе */
+  public async subscribe(id: string) {
+    const user = this.platformUserRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException(AuthException.NotFound);
+    }
+
+    if (user['role'] !== UserRole.Executor) {
+      throw new ForbiddenException(AuthException.NotExecutor);
+    }
+
+    return this.platformUserRepository.findById(user['sub']);
+  }
+
   public async getUser(id: string) {
     return this.platformUserRepository.findById(id);
   }
 
-  /** Изменение информации о пользователе */
   public async update(id: string, dto: UpdateUserDto) {
     const user = await this.platformUserRepository.findById(id);
     if (!user) {
-      throw new NotFoundException(AuthUser.NotFound);
+      throw new NotFoundException(AuthException.NotFound);
     }
 
     if (dto.specialties) {
@@ -86,8 +96,6 @@ export class AuthenticationService {
     const userEntity = new PlatformUserEntity({ ...user, ...dto });
     return this.platformUserRepository.update(id, userEntity);
   }
-
-  /** Изменение пароля пользователя */
 
   async changePassword(dto: ChangePasswordDto, id: string) {
     const { oldPassword, newPassword } = dto;

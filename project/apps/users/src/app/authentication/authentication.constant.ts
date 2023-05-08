@@ -1,8 +1,9 @@
-export const enum AuthUser {
+export const enum AuthException {
   Exists = 'User with this email exists',
   IsAuthorized = 'User is authorized',
   NotFound = 'User not found',
   PasswordWrong = 'User password is wrong',
+  NotExecutor = 'Only executor can subscribe'
 }
 
 export const enum AuthUserValidationMessage {
