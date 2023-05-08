@@ -24,7 +24,7 @@ async function fillDb() {
                 estimation: 5
               }
             },
-            tags: ['WebDev'],
+            tags: ['webdev'],
             comments: {
               create: [
                 {
@@ -58,7 +58,7 @@ async function fillDb() {
                 estimation: 5
               }
             },
-            tags: ['Technics'],
+            tags: ['technics'],
             comments: {
               create: [
                 {

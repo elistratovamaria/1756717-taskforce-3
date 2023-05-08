@@ -1,0 +1,10 @@
+# Delete comment by ID
+DELETE http://localhost:3333/api/comments/11 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ExZjMzYmJlZThlYTM4MzAxMGUiLCJlbWFpbCI6Im1hcnlAZ21haWwuY29tIiwicm9sZSI6IkV4ZWN1dG9yIiwibmFtZSI6Ik1hcnkiLCJpYXQiOjE2ODM1MTczMzMsImV4cCI6MTY4MzUxNzkzM30.b2J5d-D4OWGVsWjMZjYizi7DmMzupEoj_UeHi4NB8OU
+
+###
+
+# Delete comments by task ID
+DELETE http://localhost:3333/api/comments/tasks/7 HTTP/1.1
+
+###

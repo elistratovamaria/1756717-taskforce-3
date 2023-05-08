@@ -22,15 +22,16 @@ model Task {
   image          String?    @default("")
   address        String?    @default("")
   tags           String[]
-  city           City
-  status         StatusTask
+  city           String
+  status         String
   comments       Comment[]
   response       Response?
-  //myTask         MyTask?    @relation(fields: [myTaskId], references: [myTaskId])
-  //myTaskId       Int?       @map("my_task_id")
   createdAt      DateTime   @default(now()) @map("created_at")
   publishAt      DateTime   @updatedAt @map("publish_at")
   userId         String?    @map("user_id")
+  executorId     String?    @map("executor_id")
+  hasResponse    Boolean    @default(false) @map("has_response")
+  replies        Reply[]
 
   @@map("tasks")
 }
@@ -68,27 +69,11 @@ model Response {
   @@map("responses")
 }
 
-//model MyTask {
-  //myTaskId  Int      @id @default(autoincrement()) @map("my_task_id")
-  //task      Task[]
-  //taskId    Int      @map("task_id")
-  //userId    String   @map("user_id")
-  //createdAt DateTime @default(now()) @map("created_at")
-  //updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+model Reply {
+  replyId   Int      @id @default(autoincrement()) @map("reply_id")
+  userId    String   @map("user_id")
+  taskId    Int      @map("task_id")
+  task      Task     @relation(fields: [taskId], references: [taskId], onDelete: Cascade, onUpdate: Cascade)
 
-  //@@map("myTasks")
-//}
-
-enum City {
-  Moscow
-  SaintPetersburg
-  Vladivostok
-}
-
-enum StatusTask {
-  New
-  Cancelled
-  InProgress
-  Done
-  Failed
+  @@map("replies")
 }

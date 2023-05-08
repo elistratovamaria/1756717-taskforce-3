@@ -1,8 +1,7 @@
-import { City, Category } from '@project/shared/shared-types';
+import { City } from '@project/shared/shared-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { PlatformTaskValidationMessage } from '../platform-task.constant';
-import { IsISO8601, IsString, Min, Length, ArrayMaxSize, IsEnum, IsOptional, MinDate, Matches} from 'class-validator';
-
+import { PlatformTaskValidationMessage, TaskSetting } from '../platform-task.constant';
+import { IsISO8601, IsString, Min, Length, ArrayMaxSize, IsEnum, IsOptional, Matches, IsInt} from 'class-validator';
 
 export class CreateTaskDto {
   @ApiProperty({
@@ -10,7 +9,7 @@ export class CreateTaskDto {
     example: 'Клининг помещения'
   })
   @IsString()
-  @Length(20, 50, {message: PlatformTaskValidationMessage.TitleNotValid})
+  @Length(TaskSetting.TitleMinLength, TaskSetting.TitleMaxLength, {message: PlatformTaskValidationMessage.TitleNotValid})
   public title: string;
 
   @ApiProperty({
@@ -18,22 +17,22 @@ export class CreateTaskDto {
     example: 'Выполнить клининг офисного помещения'
   })
   @IsString()
-  @Length(100, 1024, {message: PlatformTaskValidationMessage.DescriptionNotValid})
+  @Length(TaskSetting.DescriptionMinLength, TaskSetting.DescriptionMaxLength, {message: PlatformTaskValidationMessage.DescriptionNotValid})
   public description: string;
 
   @ApiProperty({
-    description: 'Task category',
-    example: 'Клининг'
+    description: 'Category ID',
+    example: 2
   })
-  @IsString()
-  public category: Category;
+  @IsInt()
+  public categoryId: number;
 
   @ApiProperty({
     description: 'Task price',
     example: 1000
   })
   @IsOptional()
-  @Min(0, {message: PlatformTaskValidationMessage.PriceNotValid})
+  @Min(TaskSetting.PriceMinValue, {message: PlatformTaskValidationMessage.PriceNotValid})
   public price?: number;
 
   @ApiProperty({
@@ -42,13 +41,13 @@ export class CreateTaskDto {
   })
   @IsOptional()
   @IsISO8601({}, {message: PlatformTaskValidationMessage.DeadlineNotValid})
-  @MinDate(new Date(), {message: PlatformTaskValidationMessage.DeadlineNotValid})
   public deadline?: Date;
 
   @ApiProperty({
     description: 'Task picture',
     example: '/img/img.png'
   })
+
   @IsOptional()
   @IsString()
   @Matches(/\.(jpe?g|png)$/i, {message: PlatformTaskValidationMessage.ImageNotValid})
@@ -59,7 +58,7 @@ export class CreateTaskDto {
     example: 'Санкт-Петербург, наб. реки Карповки, д.5 литера П'
   })
   @IsOptional()
-  @Length(10, 255, {message: PlatformTaskValidationMessage.AddressNotValid})
+  @Length(TaskSetting.AddressMinLength, TaskSetting.AddressMaxLength, {message: PlatformTaskValidationMessage.AddressNotValid})
   public address?: string;
 
   @ApiProperty({
@@ -67,8 +66,9 @@ export class CreateTaskDto {
     example: ['быстро', 'дешёво']
   })
   @IsOptional()
-  @ArrayMaxSize(5, {message: PlatformTaskValidationMessage.TagsAmountNotValid})
-  @Length(3, 10, {each: true})
+  @ArrayMaxSize(TaskSetting.TagsMaxAmount, {message: PlatformTaskValidationMessage.TagsAmountNotValid})
+  @Length(TaskSetting.TagMinLength, TaskSetting.TagMaxLength, {each: true})
+  @Matches(/^[a-zA-Z][a-zA-Z\d]*[^ ]$/, {each: true})
   public tags?: string[];
 
   @ApiProperty({

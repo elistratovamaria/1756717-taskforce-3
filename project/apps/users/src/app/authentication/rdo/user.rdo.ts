@@ -58,8 +58,14 @@ export class UserRdo {
   public info: string;
 
   @ApiProperty({
-    description: 'User speciality',
+    description: 'User specialties',
     example: 'WebDev, PHP, Laravel'
   })
-  public speciality: string[];
+  public specialties: string[];
+
+  @ApiProperty({
+    description: 'Date of registration',
+    example: '2023-03-05'
+  })
+  public createdAt: Date;
 }

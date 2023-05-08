@@ -3,12 +3,12 @@ POST http://localhost:3000/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "John",
-  "email": "john@gmail.com",
-  "city": "Moscow",
+  "name": "Ivan",
+  "email": "ivan@gmail.com",
+  "city": "Vladivostok",
   "password": "123456",
-  "role": "Исполнитель",
-  "dateBirth": "1990-02-22"
+  "role": "Executor",
+  "dateBirth": "1990-05-07"
 }
 
 ###
@@ -18,31 +18,55 @@ POST http://localhost:3000/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "john@gmail.com",
+  "email": "vasya@gmail.com",
   "password": "123456"
 }
 
 ###
 
+# Subscribe
+POST http://localhost:3000/api/auth/subscription/645906d80634aef7c9b1e53e HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU5MDZkODA2MzRhZWY3YzliMWU1M2UiLCJlbWFpbCI6InZhc3lhQGdtYWlsLmNvbSIsInJvbGUiOiJFeGVjdXRvciIsIm5hbWUiOiJWYXN5YSIsImlhdCI6MTY4MzU1Nzk4OCwiZXhwIjoxNjgzNTU4NTg4fQ.kGI43jlzUA8uoNCd147Pa4U7re96bYcgCiaOqM8xueg
+
+###
+
 # Get user by ID
-GET http://localhost:3000/api/auth/642eb5c4859b4c3ee7ea7b50 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDJlYjVjNDg1OWI0YzNlZTdlYTdiNTAiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6ItCY0YHQv9C-0LvQvdC40YLQtdC70YwiLCJuYW1lIjoiTWFyeSIsImlhdCI6MTY4MjAyMDk4MSwiZXhwIjoxNjgyMDIxNTgxfQ.uvLBKwWeA_XrYKATehxSWmFTX7MMn3wWzK7UfQQk9pU
+GET http://localhost:3000/api/auth/6452cfa2842af6046a0470b8 HTTP/1.1
 
 ###
 
 # Update user by ID
-PATCH http://localhost:3000/api/auth/642eb5c4859b4c3ee7ea7b50 HTTP/1.1
+PATCH http://localhost:3000/api/auth/6456d227f7c1b636bbfb263e HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU2ZDIyN2Y3YzFiNjM2YmJmYjI2M2UiLCJlbWFpbCI6ImVsaXNAZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkVsaXMiLCJpYXQiOjE2ODM0NjUzNDEsImV4cCI6MTY4MzQ2NTk0MX0.EElMye1EedSXei7APG3Pg8j7FF9cYvKs5K4gMccAk6s
 
 {
-  "name": "Mary",
-  "city": "Владивосток",
-  "info": "Супер классный специалист!",
-  "speciality": [
+  "specialties": [
     "HTML",
-    "CSS"
+    "CSS",
+    "WebDev",
+    "WebDev",
+    "PHP"
   ]
 }
 
 ###
 
+# Change user password
+PATCH http://localhost:3000/api/auth/64510cb2329c20a57d56c6cf/password HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUxMGNiMjMyOWMyMGE1N2Q1NmM2Y2YiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6ItCY0YHQv9C-0LvQvdC40YLQtdC70YwiLCJuYW1lIjoiSm9obiIsImlhdCI6MTY4MzA1NDE2NywiZXhwIjoxNjgzMDU0NzY3fQ.OEEuune1FN3V_DM2LwB_SjJPVKg_E_6_Dhu8KqNw2oU
+
+
+{
+  "oldPassword": "1234567",
+  "newPassword": "12345678"
+}
+
+###
+
+# Get new JWT pair
+POST http://localhost:3000/api/auth/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDRhYmUxNThiZjQzNWQxOWZiOWFmYmUiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6ItCY0YHQv9C-0LvQvdC40YLQtdC70YwiLCJuYW1lIjoiSm9obiIsInRva2VuSWQiOiI1NDNjNTZkNC0xNjVlLTQ3NzYtOWEyMi01ODRiNGM0YTMyYmMiLCJpYXQiOjE2ODI5NzcyODUsImV4cCI6MTY4NTU2OTI4NX0.uZth1b61iMOMuFnfH6W-vjo--hO9fDXaHIHyzjJPBH4
+
+###

@@ -1,30 +1,88 @@
 #Create a new task
 POST http://localhost:3333/api/tasks HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM1MjIxNDAsImV4cCI6MTY4MzUyMjc0MH0.P77soCKSQhy5U3PSchmDEzL_MKFOTQAbl5x6paSfQ5M
 
 {
-  "title": "Клининг большого помещения",
-  "description": "Провести клининг офисного помещения, сделать чисто-чисто, очень чисто, чисто-чисто, очень чисто, чисто-чисто, очень чисто",
-  "category": "Клининг",
-  "city": "Moscow",
+  "title": "Разработать лендинг магазина",
+  "description": "Разработать сайт, стек Next.js, Nest.js. Работа срочная, пишите телеграм в отклике. Оплата по договоренности",
+  "deadline": "2023-05-11",
+  "categoryId": 1,
+  "city": "Vladivostok",
   "tags": [
-    "WebDev"
+    "Technics"
   ]
 }
 
 ###
 
 # Get task by ID
-GET http://localhost:3333/api/tasks/2 HTTP/1.1
+GET http://localhost:3333/api/tasks/25 HTTP/1.1
 
 ###
 
 # Delete task by ID
-DELETE http://localhost:3333/api/tasks/1 HTTP/1.1
+DELETE http://localhost:3333/api/tasks/4 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM1MTc2OTAsImV4cCI6MTY4MzUxODI5MH0.ZycEXtpi0IpEZGBebqq_ZhLlNO3pmK5nv5Ud9rFf5Tg
+
+###
+
+# Update task by ID
+PATCH http://localhost:3333/api/tasks/8 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM1MjIxNDAsImV4cCI6MTY4MzUyMjc0MH0.P77soCKSQhy5U3PSchmDEzL_MKFOTQAbl5x6paSfQ5M
+
+{
+  "tags": [
+    "Technics"
+  ]
+}
+
+###
+
+# Change task status
+PATCH http://localhost:3333/api/tasks/9/status HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM1MjIxNDAsImV4cCI6MTY4MzUyMjc0MH0.P77soCKSQhy5U3PSchmDEzL_MKFOTQAbl5x6paSfQ5M
+
+
+{
+  "status": "inprogress",
+  "executorId": "6452ca1f33bbee8ea383010e"
+}
+
+###
+
+# Put a reply
+POST http://localhost:3333/api/tasks/9/reply HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ExZjMzYmJlZThlYTM4MzAxMGUiLCJlbWFpbCI6Im1hcnlAZ21haWwuY29tIiwicm9sZSI6IkV4ZWN1dG9yIiwibmFtZSI6Ik1hcnkiLCJpYXQiOjE2ODM1MjI5NDIsImV4cCI6MTY4MzUyMzU0Mn0.Qb48zJhjLrYGBS5N41QjADHa_sa-SdYzXGnK7NQjcEs
 
 ###
 
 # Get all tasks and filtres
-GET http://localhost:3333/api/tasks?sortDirection=desc&category=1&limit=2&page=1 HTTP/1.1
+GET http://localhost:3333/api/tasks?sortDirection=desc&sortType=repliesAmount&page=1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU3Y2NkMjJkNzVmNWM4N2Y4Yjc2NTciLCJlbWFpbCI6ImFsaWNlQGdtYWlsLmNvbSIsInJvbGUiOiJFeGVjdXRvciIsIm5hbWUiOiJBbGljZSIsImlhdCI6MTY4MzQ5MDkxOSwiZXhwIjoxNjgzNDkxNTE5fQ.-hRlUzjUFre-myewt0u3E-4gnGi397ZDy_swddHrrJw
+
+###
+
+# Get my tasks and filtres
+GET http://localhost:3333/api/tasks/mytasks?status=new HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU2ZDIyN2Y3YzFiNjM2YmJmYjI2M2UiLCJlbWFpbCI6ImVsaXNAZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkVsaXMiLCJpYXQiOjE2ODM1MDY5MDcsImV4cCI6MTY4MzUwNzUwN30.LvZ63eBFs6ZWhRA5sQbzigyUHe5FCjh7LGq-NPk1gxA
+###
+
+# Create a new comment
+POST http://localhost:3333/api/tasks/7/comments HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ExZjMzYmJlZThlYTM4MzAxMGUiLCJlbWFpbCI6Im1hcnlAZ21haWwuY29tIiwicm9sZSI6IkV4ZWN1dG9yIiwibmFtZSI6Ik1hcnkiLCJpYXQiOjE2ODM1MTczMzMsImV4cCI6MTY4MzUxNzkzM30.b2J5d-D4OWGVsWjMZjYizi7DmMzupEoj_UeHi4NB8OU
+
+{
+  "message": "Легкое задание",
+  "taskId": 1
+}
+
+###
+
+# Show comments
+GET http://localhost:3333/api/tasks/2/comments?limit=2&page=1 HTTP/1.1
 
 ###

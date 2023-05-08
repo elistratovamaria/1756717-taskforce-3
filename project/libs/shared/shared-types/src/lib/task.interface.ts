@@ -1,22 +1,23 @@
-import { City } from './city.enum';
-import { StatusTask } from './status-task.enum';
 import { Comment } from './comment.interface';
 import { Response } from './response.interface';
-import { Category } from './category.interface';
+import { Reply } from './reply.interface';
 
 export interface Task {
   id?: number;
   title: string;
   description: string;
-  category: Category;
+  categoryId: number;
   price?: number;
   deadline?: Date;
   image?: string;
   address?: string;
   tags?: string[];
-  city: any;
-  status?: any;
+  city: string;
+  status?: string;
   userId: string;
+  executorId?: string;
+  hasResponse: boolean;
   comments?: Comment[];
   response?: Response;
+  replies?: Reply[];
 }

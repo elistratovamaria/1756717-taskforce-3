@@ -1,16 +1,22 @@
-import { Body, Controller, Post, Get, Param, HttpStatus, Delete, Query} from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, HttpStatus, Delete, Query, Patch, Headers} from '@nestjs/common';
 import { PlatformTaskService } from './platform-task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { fillObject } from '@project/util/util-core';
 import { TaskRdo } from './rdo/task.rdo';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { TaskQuery } from './query/task.query';
+import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskReplyRdo } from '../task-reply/rdo/reply.rdo';
+import { TaskInListRdo } from './rdo/task-in-list.rdo';
+import { TaskCommentRdo } from '../task-comment/rdo/task-comment.rdo';
+import { CreateCommentDto } from '../task-comment/dto/create-comment.dto';
+import { TaskCommentQuery } from '../task-comment/query/task-comment.query';
 
 @ApiTags('tasks')
 @Controller('tasks')
 export class PlatformTaskController {
   constructor(
-    private readonly taskService: PlatformTaskService
+    private readonly taskService: PlatformTaskService,
   ) {}
 
   @ApiResponse({
@@ -22,10 +28,31 @@ export class PlatformTaskController {
     status: HttpStatus.FORBIDDEN,
     description: 'User does not have enough rights to add a task'
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
   @Post()
-  public async create(@Body() dto: CreateTaskDto) {
-    const newTask = await this.taskService.createTask(dto);
+  public async create(@Body() dto: CreateTaskDto, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const newTask = await this.taskService.createTask(dto, token);
     return fillObject(TaskRdo, newTask);
+  }
+
+  @ApiResponse({
+    type: TaskInListRdo,
+    status: HttpStatus.OK,
+    description: 'Tasks found'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
+  @Get('/mytasks')
+  async showMyTasks(@Query() query: TaskQuery, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const tasks = await this.taskService.getMyTasks(query, token);
+    return fillObject(TaskInListRdo, tasks);
   }
 
   @ApiResponse({
@@ -55,20 +82,148 @@ export class PlatformTaskController {
     status: HttpStatus.FORBIDDEN,
     description: 'The user does not have enough rights to delete the task'
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
   @Delete('/:id')
-  public async delete(@Param('id') id: number) {
-    this.taskService.deleteTask(id);
+  public async delete(@Param('id') id: number, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    await this.taskService.deleteTask(id, token);
   }
 
 
   @ApiResponse({
-    type: TaskRdo,
+    type: TaskInListRdo,
     status: HttpStatus.OK,
     description: 'Tasks found'
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'The user does not have enough rights to see new tasks'
+  })
   @Get('/')
-  async index(@Query() query: TaskQuery) {
-    const tasks = await this.taskService.getTasks(query);
-    return fillObject(TaskRdo, tasks);
+  async index(@Query() query: TaskQuery, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const tasks = await this.taskService.getNewTasks(query, token);
+    return fillObject(TaskInListRdo, tasks);
+  }
+
+  @ApiResponse({
+    type: TaskRdo,
+    status: HttpStatus.OK,
+    description: 'The task has been successfully updated'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task with this ID does not exist'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have enough rights to update a task'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
+  @Patch('/:id')
+  public async update(@Body() dto: UpdateTaskDto, @Param('id') id: number, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const updatedTask = await this.taskService.updateTask(id, dto, token);
+    return fillObject(TaskRdo, updatedTask);
+  }
+
+  @ApiResponse({
+    type: TaskRdo,
+    status: HttpStatus.OK,
+    description: 'The status has been successfully updated'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task with this ID does not exist'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have enough rights to add a task'
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Incorrect status changing'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
+  @Patch('/:id/status')
+  public async changeStatus(@Param('id') id: number, @Body() dto: UpdateTaskDto, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const updatedTask = await this.taskService.changeStatus(id, dto, token);
+    return fillObject(TaskRdo, updatedTask);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'The reply has been successfully created'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task with this ID does not exist'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have enough rights to add a reply'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
+  @Post('/:id/reply')
+  public async putReply(@Param('id', ) id: number, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const reply = await this.taskService.putReply(id, token);
+    return fillObject(TaskReplyRdo, reply);
+  }
+
+  @ApiResponse({
+    type: TaskCommentRdo,
+    status: HttpStatus.CREATED,
+    description: 'The comment has been successfully created'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have enough rights to add a comment'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task with this ID does not exist'
+  })
+  @Post('/:taskId/comments')
+  public async createComment(@Body() dto: CreateCommentDto, @Param('taskId') taskId: number, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const newComment = await this.taskService.createComment(dto, taskId, token);
+    return fillObject(TaskCommentRdo, newComment);
+  }
+
+  @ApiResponse({
+    type: TaskCommentRdo,
+    status: HttpStatus.OK,
+    description: 'Comments found'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task with this ID does not exist'
+  })
+  @Get('/:taskId/comments')
+  async showComments(@Query() query: TaskCommentQuery, @Param('taskId') taskId: number) {
+    const comments = await this.taskService.getComments(query, taskId);
+    return fillObject(TaskCommentRdo, comments);
   }
 }

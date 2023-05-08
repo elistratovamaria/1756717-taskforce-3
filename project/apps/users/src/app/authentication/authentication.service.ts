@@ -1,36 +1,50 @@
-import { Injectable, ConflictException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, ConflictException, Inject, NotFoundException, UnauthorizedException, ForbiddenException } from '@nestjs/common';
 import { PlatformUserRepository } from '../platform-user/platform-user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { ConfigService, ConfigType } from '@nestjs/config';
 import dayjs from 'dayjs';
-import { AuthUser } from './authentication.constant';
+import { AuthException } from './authentication.constant';
 import { PlatformUserEntity } from '../platform-user/platform-user.entity';
-import { TokenPayload, User } from '@project/shared/shared-types';
+import { User, UserRole } from '@project/shared/shared-types';
 import { JwtService } from '@nestjs/jwt';
-import { UpdateUserDto } from '../platform-user/dto/update-user.dto';
+import { jwtConfig } from '@project/config/config-users';
+import { RefreshTokenService } from '../refresh-token/refresh-token.service';
+import { createJWTPayload } from '@project/util/util-core';
+import * as crypto from 'node:crypto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private readonly platformUserRepository: PlatformUserRepository,
+    private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    @Inject (jwtConfig.KEY) private readonly jwtOptions: ConfigType<typeof jwtConfig>,
+    private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
-  /** Регистрация пользователя */
-  public async register(dto: CreateUserDto) {
+  public async register(dto: CreateUserDto, token?: string) {
+    const user = this.jwtService.decode(token);
+
+    if (user) {
+      throw new ForbiddenException(AuthException.IsAuthorized);
+    }
+
     const {name, email, city, password, role, dateBirth} = dto;
 
     const platformUser = {
       name, email, city, role,
       avatar: '', dateBirth: dayjs(dateBirth).toDate(),
-      passwordHash: '', info: '', speciality: []
+      passwordHash: '', info: '', specialties: []
     };
 
     const existUser = await this.platformUserRepository
       .findByEmail(email);
 
     if (existUser) {
-      throw new ConflictException(AuthUser.Exists);
+      throw new ConflictException(AuthException.Exists);
     }
 
     const userEntity = await new PlatformUserEntity(platformUser)
@@ -40,49 +54,79 @@ export class AuthenticationService {
       .create(userEntity);
   }
 
-  /** Авторизация пользователя */
   public async verifyUser(dto: LoginUserDto) {
     const {email, password} = dto;
     const existUser = await this.platformUserRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new NotFoundException(AuthUser.NotFound);
+      throw new NotFoundException(AuthException.NotFound);
     }
 
     const platformUserEntity = new PlatformUserEntity(existUser);
     if (!await platformUserEntity.comparePassword(password)) {
-      throw new UnauthorizedException(AuthUser.PasswordWrong);
+      throw new UnauthorizedException(AuthException.PasswordWrong);
     }
 
     return platformUserEntity.toObject();
   }
 
-  /** Получение данных о пользователе */
+  public async subscribe(id: string) {
+    const user = this.platformUserRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException(AuthException.NotFound);
+    }
+
+    if (user['role'] !== UserRole.Executor) {
+      throw new ForbiddenException(AuthException.NotExecutor);
+    }
+
+    return this.platformUserRepository.findById(user['sub']);
+  }
+
   public async getUser(id: string) {
     return this.platformUserRepository.findById(id);
   }
 
-  /** Изменение информации о пользователе */
   public async update(id: string, dto: UpdateUserDto) {
     const user = await this.platformUserRepository.findById(id);
     if (!user) {
-      throw new NotFoundException(AuthUser.NotFound);
+      throw new NotFoundException(AuthException.NotFound);
+    }
+
+    if (dto.specialties) {
+      const specialties = dto.specialties.map((spec) => spec.toLowerCase());
+      dto.specialties = [...new Set(specialties)];
     }
 
     const userEntity = new PlatformUserEntity({ ...user, ...dto });
     return this.platformUserRepository.update(id, userEntity);
   }
 
-  public async createUserToken(user: User) {
-    const payload: TokenPayload = {
-      sub: user._id,
+  async changePassword(dto: ChangePasswordDto, id: string) {
+    const { oldPassword, newPassword } = dto;
+    const user = await this.platformUserRepository.findById(id);
+    await this.verifyUser({
       email: user.email,
-      role: user.role,
-      name: user.name,
-    };
+      password: oldPassword,
+    });
+    const userEntity = await new PlatformUserEntity({ ...user }).setPassword(
+      newPassword
+    );
+    return this.platformUserRepository.update(id, userEntity);
+  }
+
+  public async createUserToken(user: User) {
+    const accessTokenPayload = createJWTPayload(user);
+    const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };
+    await this.refreshTokenService.createRefreshSession(refreshTokenPayload)
 
     return {
-      accessToken: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync(accessTokenPayload),
+      refreshToken: await this.jwtService.signAsync(refreshTokenPayload, {
+        secret: this.jwtOptions.refreshTokenSecret,
+        expiresIn: this.jwtOptions.refreshTokenExpiresIn
+      })
     }
   }
 }

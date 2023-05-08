@@ -1,13 +1,14 @@
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { Category } from '@project/shared/shared-types';
 
 export class TaskRdo {
   @ApiProperty({
     description: 'The unique task ID',
-    example: '234'
+    example: 234
   })
-  @Expose({name: '_id'})
-  public id: string;
+  @Expose({name: 'taskId'})
+  public id: number;
 
   @ApiProperty({
     description: 'Task title',
@@ -28,7 +29,8 @@ export class TaskRdo {
     example: 'Клининг'
   })
   @Expose()
-  public category: string;
+  @Transform(({obj}) => obj.title)
+  public category: Category;
 
   @ApiProperty({
     description: 'Task price',
@@ -78,11 +80,4 @@ export class TaskRdo {
   })
   @Expose()
   public status: string;
-
-  @ApiProperty({
-    description: 'User ID',
-    example: '13'
-  })
-  @Expose()
-  public userId: string;
 }

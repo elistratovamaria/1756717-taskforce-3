@@ -1,18 +1,21 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards, Headers } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { fillObject } from '@project/util/util-core';
 import { UserRdo } from './rdo/user.rdo';
-import { LoginUserDto } from './dto/login-user.dto';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
-import { ExecutorRdo } from '../platform-user/rdo/executor.rdo';
-import { CustomerRdo } from '../platform-user/rdo/customer.rdo';
+import { ExecutorRdo } from './rdo/executor.rdo';
+import { CustomerRdo } from './rdo/customer.rdo';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { MongoidValidationPipe } from '@project/shared/shared-pipes';
 import { UserRole } from '@project/shared/shared-types';
-import { UpdateUserDto } from '../platform-user/dto/update-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { NotifyService } from '../notify/notify.service';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { RequestWithUser } from '@project/shared/shared-types';
+import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -22,7 +25,6 @@ export class AuthenticationController {
     private readonly notifyService: NotifyService,
   ) { }
 
-  /** Создание нового пользователя */
   @ApiResponse({
     type: UserRdo,
     status: HttpStatus.CREATED,
@@ -30,17 +32,17 @@ export class AuthenticationController {
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
-    description: 'The user with this email is already exists'
+    description: 'The user with this email already exists'
   })
   @Post('register')
-  public async create(@Body() dto: CreateUserDto) {
-    const newUser = await this.authService.register(dto);
-    const { email, name } = newUser;
-    await this.notifyService.registerSubscriber({ email, name });
-    return fillObject(UserRdo, newUser);
+  public async create(@Body() dto: CreateUserDto, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const newUser = await this.authService.register(dto, token);
+    const { role } = newUser;
+    return role === UserRole.Customer ? fillObject(CustomerRdo, newUser) : fillObject(ExecutorRdo, newUser);
   }
 
-  /** Авторизация пользователя */
+  @UseGuards(LocalAuthGuard)
   @ApiResponse({
     type: LoggedUserRdo,
     status: HttpStatus.OK,
@@ -56,20 +58,29 @@ export class AuthenticationController {
   })
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  public async login(@Body() dto: LoginUserDto) {
-    const verifiedUser = await this.authService.verifyUser(dto);
-    const loggedUser = await this.authService.createUserToken(verifiedUser);
-    return fillObject(LoggedUserRdo, Object.assign(verifiedUser, loggedUser));
+  public async login(@Req() { user }: RequestWithUser) {
+    return this.authService.createUserToken(user);
   }
 
-  /** Получение информации о пользователе */
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
-    type: ExecutorRdo,
+    type: UserRdo,
     status: HttpStatus.OK,
-    description: 'User found'
+    description: 'The subscription was successful'
   })
   @ApiResponse({
-    type: CustomerRdo,
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User is not authorized'
+  })
+  @Post('/subscription/:id')
+  public async subscribe(@Param('id', MongoidValidationPipe) id: string) {
+    const existUser = await this.authService.getUser(id);
+    const { email, name } = existUser;
+    return await this.notifyService.registerSubscriber({ email, name });
+  }
+
+  @ApiResponse({
+    type: UserRdo,
     status: HttpStatus.OK,
     description: 'User found'
   })
@@ -77,22 +88,60 @@ export class AuthenticationController {
     status: HttpStatus.NOT_FOUND,
     description: 'The user with this id does not exist'
   })
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   public async show(@Param('id', MongoidValidationPipe) id: string) {
     const existUser = await this.authService.getUser(id);
     return existUser.role === UserRole.Customer ? fillObject(CustomerRdo, existUser) : fillObject(ExecutorRdo, existUser);
   }
 
-  /** Изменение информации о пользователе */
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     type: ExecutorRdo,
     status: HttpStatus.OK,
     description: 'User update'
   })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'The user with this id does not exist',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User is unauthorized',
+  })
   @Patch(':id')
   public async update(@Param('id', MongoidValidationPipe) id: string, @Body() dto: UpdateUserDto) {
-    const user = await this.authService.update(id, dto);
-    return fillObject(ExecutorRdo, user);
+    const updatedUser = await this.authService.update(id, dto);
+    return updatedUser.role === UserRole.Customer ? fillObject(CustomerRdo, updatedUser) : fillObject(ExecutorRdo, updatedUser);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/password')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Password has been changed successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'The user with this id does not exist',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User is unauthorized',
+  })
+  public async changePassword(@Param('id', MongoidValidationPipe) id: string, @Body() dto: ChangePasswordDto) {
+    await this.authService.changePassword(dto, id);
+    return {};
+  }
+
+  @UseGuards(JwtRefreshGuard)
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Get a new access/refresh tokens'
+  })
+  public async refreshToken(@Req() { user }: RequestWithUser) {
+    return this.authService.createUserToken(user);
   }
 }

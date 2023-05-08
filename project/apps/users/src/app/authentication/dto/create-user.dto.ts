@@ -1,7 +1,8 @@
 import { UserRole, City } from '@project/shared/shared-types';
-import { AuthUserValidationMessage } from '../authentication.constant';
+import { AuthUserValidationMessage, UserSetting } from '../authentication.constant';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsISO8601, IsString, Length, IsEmail, IsEnum } from 'class-validator';
+import { MinimumValidAge } from '../validators/age.validator';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -9,7 +10,7 @@ export class CreateUserDto {
     example: 'Ivan Smirnov'
   })
   @IsString()
-  @Length(3, 50, { message: AuthUserValidationMessage.NameNotValid })
+  @Length(UserSetting.NameMinLength, UserSetting.NameMaxLength, { message: AuthUserValidationMessage.NameNotValid })
   public name: string;
 
   @ApiProperty({
@@ -21,7 +22,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'User city',
-    example: 'Москва',
+    example: 'Moscow',
     type: () => typeof City.Moscow
   })
   @IsEnum(City, { message: AuthUserValidationMessage.CityNotValid })
@@ -32,12 +33,12 @@ export class CreateUserDto {
     example: '123456'
   })
   @IsString()
-  @Length(6, 12, { message: AuthUserValidationMessage.PasswordNotValid })
+  @Length(UserSetting.PasswordMinLength, UserSetting.PasswordMaxLength, { message: AuthUserValidationMessage.PasswordNotValid })
   public password: string;
 
   @ApiProperty({
     description: 'User role',
-    example: 'Исполнитель',
+    example: 'Executor',
     type: () => typeof UserRole.Customer
   })
   @IsEnum(UserRole, { message: AuthUserValidationMessage.UserRoleNotValid })
@@ -48,5 +49,6 @@ export class CreateUserDto {
     example: '1980-01-01'
   })
   @IsISO8601({}, { message: AuthUserValidationMessage.DateBirthNotValid })
+  @MinimumValidAge(UserSetting.MinimumAge, { message: AuthUserValidationMessage.DateBirthMinor})
   public dateBirth: Date;
 }
