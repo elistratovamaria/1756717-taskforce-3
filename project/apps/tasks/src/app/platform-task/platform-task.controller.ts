@@ -37,6 +37,22 @@ export class PlatformTaskController {
   }
 
   @ApiResponse({
+    type: TaskInListRdo,
+    status: HttpStatus.OK,
+    description: 'Tasks found'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
+  @Get('/mytasks')
+  async showMyTasks(@Query() query: TaskQuery, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const tasks = await this.taskService.getMyTasks(query, token);
+    return fillObject(TaskInListRdo, tasks);
+  }
+
+  @ApiResponse({
     type: TaskRdo,
     status: HttpStatus.OK,
     description: 'Task found'

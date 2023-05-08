@@ -14,13 +14,13 @@ export class TaskQuery {
 
   @Transform(({ value } ) => value.id)
   @IsOptional()
-  public category: Category;
+  public category?: Category;
 
   @IsOptional()
-  public tag: string;
+  public tag?: string;
 
   @IsOptional()
-  public city: City;
+  public city?: City;
 
   @IsIn(['asc', 'desc'])
   @IsOptional()
@@ -28,8 +28,8 @@ export class TaskQuery {
 
   @Transform(({ value }) => +value)
   @IsOptional()
-  public page: number;
+  public page?: number;
 
   @IsOptional()
-  public status: StatusTask;
+  public status?: StatusTask;
 }

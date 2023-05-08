@@ -1,7 +1,7 @@
 export enum StatusTask {
-  New = 'New',
-  Cancelled = 'Cancelled',
-  InProgress = 'InProgress',
-  Done = 'Done',
-  Failed ='Failed',
+  New = 'new',
+  Cancelled = 'cancelled',
+  InProgress = 'inprogress',
+  Done = 'done',
+  Failed ='failed',
 }

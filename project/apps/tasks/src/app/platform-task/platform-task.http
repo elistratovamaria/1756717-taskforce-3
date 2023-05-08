@@ -1,14 +1,14 @@
 #Create a new task
 POST http://localhost:3333/api/tasks HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM0MTA0MzksImV4cCI6MTY4MzQxMTAzOX0.7uW-rwxIzDubHWNvnMcoLxoqVAsj3_aezAdttbH028w
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU2ZDIyN2Y3YzFiNjM2YmJmYjI2M2UiLCJlbWFpbCI6ImVsaXNAZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkVsaXMiLCJpYXQiOjE2ODM1MDY5MDcsImV4cCI6MTY4MzUwNzUwN30.LvZ63eBFs6ZWhRA5sQbzigyUHe5FCjh7LGq-NPk1gxA
 
 {
-  "title": "Разработать сайт магазина",
+  "title": "Разработать лендинг магазина",
   "description": "Разработать сайт, стек Next.js, Nest.js. Работа срочная, пишите телеграм в отклике. Оплата по договоренности",
-  "deadline": "2023-05-10",
+  "deadline": "2023-05-11",
   "categoryId": 1,
-  "city": "SaintPetersburg",
+  "city": "Vladivostok",
   "tags": [
     "Technics"
   ]
@@ -41,9 +41,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhM
 ###
 
 # Change task status
-PATCH http://localhost:3333/api/tasks/1/status HTTP/1.1
+PATCH http://localhost:3333/api/tasks/6/status HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM0NzgyNjQsImV4cCI6MTY4MzQ3ODg2NH0.d6_vxuM38ibNgvGGYpi8_6JL8FGMYwIqP8AvuCiOdF8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU2ZDIyN2Y3YzFiNjM2YmJmYjI2M2UiLCJlbWFpbCI6ImVsaXNAZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkVsaXMiLCJpYXQiOjE2ODM1MDYyNjcsImV4cCI6MTY4MzUwNjg2N30.asjUGF0oOfH8ZsP63L5MAwCXLsyToQLp6ktdfdyEXKA
 
 
 {
@@ -54,8 +54,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhM
 ###
 
 # Put a reply
-POST http://localhost:3333/api/tasks/4/reply HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU3Y2NkMjJkNzVmNWM4N2Y4Yjc2NTciLCJlbWFpbCI6ImFsaWNlQGdtYWlsLmNvbSIsInJvbGUiOiJFeGVjdXRvciIsIm5hbWUiOiJBbGljZSIsImlhdCI6MTY4MzQ5OTMzMywiZXhwIjoxNjgzNDk5OTMzfQ.D5fq09jFW2hIMsQkvQUEY26xswNeXFAT62ufZ2Wv-Rw
+POST http://localhost:3333/api/tasks/6/reply HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU3Y2NkMjJkNzVmNWM4N2Y4Yjc2NTciLCJlbWFpbCI6ImFsaWNlQGdtYWlsLmNvbSIsInJvbGUiOiJFeGVjdXRvciIsIm5hbWUiOiJBbGljZSIsImlhdCI6MTY4MzUwNjIyNiwiZXhwIjoxNjgzNTA2ODI2fQ.pg-m7U_T_JcOg5IqIb-Be0ScQM7n6jRVlS7BRPcXTt8
 
 ###
 
@@ -64,3 +64,9 @@ GET http://localhost:3333/api/tasks?sortDirection=desc&sortType=repliesAmount&pa
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU3Y2NkMjJkNzVmNWM4N2Y4Yjc2NTciLCJlbWFpbCI6ImFsaWNlQGdtYWlsLmNvbSIsInJvbGUiOiJFeGVjdXRvciIsIm5hbWUiOiJBbGljZSIsImlhdCI6MTY4MzQ5MDkxOSwiZXhwIjoxNjgzNDkxNTE5fQ.-hRlUzjUFre-myewt0u3E-4gnGi397ZDy_swddHrrJw
 
 ###
+
+# Get my tasks and filtres
+GET http://localhost:3333/api/tasks/mytasks?status=new HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU2ZDIyN2Y3YzFiNjM2YmJmYjI2M2UiLCJlbWFpbCI6ImVsaXNAZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkVsaXMiLCJpYXQiOjE2ODM1MDY5MDcsImV4cCI6MTY4MzUwNzUwN30.LvZ63eBFs6ZWhRA5sQbzigyUHe5FCjh7LGq-NPk1gxA
+###
+

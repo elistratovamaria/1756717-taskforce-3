@@ -11,6 +11,7 @@ import { TaskException } from './platform-task.constant';
 import { JwtService } from '@nestjs/jwt';
 import { TaskCommentRepository } from '../task-comment/task-comment.repository';
 import { TaskReplyService } from '../task-reply/task-reply.service';
+import { sortByStatus } from '@project/util/util-core';
 
 @Injectable()
 export class PlatformTaskService {
@@ -98,6 +99,22 @@ export class PlatformTaskService {
     }
 
     return this.platformTaskRepository.find(query);
+  }
+
+  public async getMyTasks(query: TaskQuery, token?: string): Promise<Task[]> {
+    const user = this.jwtService.decode(token);
+
+    if (!user) {
+      throw new UnauthorizedException(TaskException.Unauthorized);
+    }
+
+    const role = user['role'];
+    const { status } = query;
+
+    const tasks = await this.platformTaskRepository.findMyTasks(role, user['sub'], status);
+
+    return role === UserRole.Customer ? tasks
+      : sortByStatus(tasks);
   }
 
   public async updateTask(id: number, dto: UpdateTaskDto, token?: string) {

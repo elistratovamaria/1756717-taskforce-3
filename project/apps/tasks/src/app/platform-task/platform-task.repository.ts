@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CRUDRepository } from '@project/util/util-types';
 import { PlatformTaskEntity } from './platform-task.entity';
-import { City, SortType, StatusTask, Task } from '@project/shared/shared-types';
+import { City, SortType, StatusTask, Task, UserRole } from '@project/shared/shared-types';
 import { PrismaService } from '../prisma/prisma.service';
 import { TaskQuery } from './query/task.query';
 
@@ -151,8 +151,38 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
     }
     return tasks.map((task) => ({
       ...task,
-      commentsAmount: task.comments.length,
-      repliesAmount: task.replies.length
+      commentsAmount: task.comments?.length || 0,
+      repliesAmount: task.replies?.length || 0
+    }));
+  }
+
+  public async findMyTasks(role: UserRole, id: string, status?: StatusTask): Promise<Task[]> {
+    let tasks: Task[];
+    if (role === UserRole.Customer) {
+      tasks = await this.prisma.task.findMany({
+        where: {
+          userId: id,
+          status,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    } else {
+      tasks = await this.prisma.task.findMany({
+        where: {
+          executorId: id,
+          status,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    }
+    return tasks.map((task) => ({
+      ...task,
+      commentsAmount: task.comments?.length || 0,
+      repliesAmount: task.replies?.length || 0
     }));
   }
 
