@@ -95,4 +95,11 @@ export class UpdateTaskDto {
   })
   @IsOptional()
   public executorId?: string;
+
+  @ApiProperty({
+    description: 'Show if the task has a response',
+    example: true
+  })
+  @IsOptional()
+  public hasResponse?: boolean;
 }

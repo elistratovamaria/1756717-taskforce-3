@@ -77,7 +77,7 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
             };
           })(),
           city: city,
-          status: 'New',
+          status: 'new',
         },
         take: limit,
         include: {
@@ -106,7 +106,7 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
             };
           })(),
           city: city,
-          status: 'New'
+          status: 'new'
         },
         take: limit,
         include: {
@@ -135,7 +135,7 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
             };
           })(),
           city: city,
-          status: 'New'
+          status: 'new'
         },
         take: limit,
         include: {
@@ -216,10 +216,20 @@ export class PlatformTaskRepository implements CRUDRepository<PlatformTaskEntity
   public async checkExecutorInWork(userId: string): Promise<boolean> {
     const tasksInProgress = await this.prisma.task.findMany({
       where: {
-        status: 'InProgress'
+        status: 'inprogress'
       }
     });
     const executorsInWork = tasksInProgress.map((task) => task.executorId);
     return executorsInWork.includes(userId);
+  }
+
+  public async countExecutorFailedTasks(userId: string): Promise<number> {
+    const failedTasks = await this.prisma.task.findMany({
+      where: {
+        status: 'failed',
+        executorId: userId
+      }
+    });
+    return failedTasks.length;
   }
 }

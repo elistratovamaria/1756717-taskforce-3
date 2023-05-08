@@ -1,10 +1,11 @@
 # Create a new response
-POST http://localhost:3333/api/responses HTTP/1.1
+POST http://localhost:3333/api/responses/8/6452ca1f33bbee8ea383010e HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM1MjIxNDAsImV4cCI6MTY4MzUyMjc0MH0.P77soCKSQhy5U3PSchmDEzL_MKFOTQAbl5x6paSfQ5M
 
 {
-  "message": "Задание выполнено качественно и в срок",
-  "taskId": "24",
+  "message": "Задание выполнено качественно и в срок, замечательная работа",
+  "taskId": 3,
   "estimation": 5
 }
 

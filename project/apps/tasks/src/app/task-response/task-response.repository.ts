@@ -33,6 +33,15 @@ export class TaskResponseRepository implements CRUDRepository<TaskResponseEntity
     });
   }
 
+  public async findExisted(taskId: number, userId: string): Promise<Response | null> {
+    return this.prisma.response.findFirst({
+      where: {
+        taskId,
+        userId
+      },
+    });
+  }
+
   public async update(responseId: number, item: TaskResponseEntity): Promise<Response> {
     const entityData = item.toObject();
     return await this.prisma.response.update({
@@ -43,5 +52,26 @@ export class TaskResponseRepository implements CRUDRepository<TaskResponseEntity
         ...entityData,
       }
     });
+  }
+
+  public async countEstimation(userId: string): Promise<number> {
+    const estimationObj = await this.prisma.response.aggregate({
+      _sum: {
+        estimation: true,
+      },
+      where: {
+        userId,
+        },
+    });
+    return estimationObj._sum.estimation;
+  }
+
+  public async countResponses(userId: string): Promise<number> {
+    const responses = await this.prisma.response.findMany({
+      where: {
+        userId,
+        },
+    });
+    return responses.length;
   }
 }

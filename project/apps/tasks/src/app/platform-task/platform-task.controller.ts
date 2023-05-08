@@ -8,6 +8,9 @@ import { TaskQuery } from './query/task.query';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskReplyRdo } from '../task-reply/rdo/reply.rdo';
 import { TaskInListRdo } from './rdo/task-in-list.rdo';
+import { TaskCommentRdo } from '../task-comment/rdo/task-comment.rdo';
+import { CreateCommentDto } from '../task-comment/dto/create-comment.dto';
+import { TaskCommentQuery } from '../task-comment/query/task-comment.query';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -179,9 +182,48 @@ export class PlatformTaskController {
     description: 'The user is not authorized'
   })
   @Post('/:id/reply')
-  public async putReply(@Param('id') id: number, @Headers('authorization') authorization?: string) {
+  public async putReply(@Param('id', ) id: number, @Headers('authorization') authorization?: string) {
     const token = authorization?.split(' ')[1];
     const reply = await this.taskService.putReply(id, token);
     return fillObject(TaskReplyRdo, reply);
+  }
+
+  @ApiResponse({
+    type: TaskCommentRdo,
+    status: HttpStatus.CREATED,
+    description: 'The comment has been successfully created'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have enough rights to add a comment'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The user is not authorized'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task with this ID does not exist'
+  })
+  @Post('/:taskId/comments')
+  public async createComment(@Body() dto: CreateCommentDto, @Param('taskId') taskId: number, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const newComment = await this.taskService.createComment(dto, taskId, token);
+    return fillObject(TaskCommentRdo, newComment);
+  }
+
+  @ApiResponse({
+    type: TaskCommentRdo,
+    status: HttpStatus.OK,
+    description: 'Comments found'
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Task with this ID does not exist'
+  })
+  @Get('/:taskId/comments')
+  async showComments(@Query() query: TaskCommentQuery, @Param('taskId') taskId: number) {
+    const comments = await this.taskService.getComments(query, taskId);
+    return fillObject(TaskCommentRdo, comments);
   }
 }

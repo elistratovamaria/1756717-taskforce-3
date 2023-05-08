@@ -1,4 +1,4 @@
-import { Controller, Body, Post, HttpStatus, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Body, Post, HttpStatus, Param, Headers } from '@nestjs/common';
 import { TaskResponseService } from './task-response.service';
 import { CreateResponseDto } from './dto/create-response.dto';
 import { fillObject } from '@project/util/util-core';
@@ -22,8 +22,9 @@ export class TaskResponseController {
     description: 'User does not have enough rights to add a response'
   })
   @Post(':taskId/:userId')
-  public async create(@Body() dto: CreateResponseDto, @Param('taskId', ParseIntPipe) taskId: number, @Param('userId') userId: string) {
-    const newResponse = await this.responseService.createResponse(dto, userId, taskId);
+  public async create(@Body() dto: CreateResponseDto, @Param('taskId') taskId: number, @Param('userId') userId: string, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const newResponse = await this.responseService.createResponse(dto, userId, taskId, token);
     return fillObject(ResponseRdo, newResponse);
   }
 }

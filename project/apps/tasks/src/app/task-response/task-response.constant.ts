@@ -4,7 +4,11 @@ export const enum TaskResponseValidationMessage {
 }
 
 export const enum TaskResponseException {
-  Forbidden = 'You can make a response only for those executors who have done your task'
+  Forbidden = 'You can make a response only for those executors who have done your task',
+  Unauthorized = 'The user is unauthorized',
+  NotExisted = 'The task is not existed',
+  ResponseExists = 'The response on this task already exists',
+  Status = 'Responses could be created only for tasks with done status'
 }
 
 export const enum TaskResponseSetting {

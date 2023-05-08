@@ -12,6 +12,9 @@ import { JwtService } from '@nestjs/jwt';
 import { TaskCommentRepository } from '../task-comment/task-comment.repository';
 import { TaskReplyService } from '../task-reply/task-reply.service';
 import { sortByStatus } from '@project/util/util-core';
+import { CreateCommentDto } from '../task-comment/dto/create-comment.dto';
+import { TaskCommentEntity } from '../task-comment/task-comment.entity';
+import { TaskCommentQuery } from '../task-comment/query/task-comment.query';
 
 @Injectable()
 export class PlatformTaskService {
@@ -214,5 +217,33 @@ export class PlatformTaskService {
     }
 
     return this.taskReplyService.createReply(id, user['sub']);
+  }
+
+  public async createComment(dto: CreateCommentDto, taskId: number, token?: string) {
+    const user = this.jwtService.decode(token);
+    const task = await this.platformTaskRepository.findById(taskId);
+
+    if (!task) {
+      throw new BadRequestException(TaskException.NotExisted);
+    }
+
+    if (!user) {
+      throw new UnauthorizedException(TaskException.Unauthorized);
+    }
+
+    const commentEntity = new TaskCommentEntity({ ...dto, userId: user['sub'], taskId });
+
+    return this.taskCommentRepository
+      .create(commentEntity);
+  }
+
+  public async getComments(query: TaskCommentQuery, taskId: number) {
+    const task = await this.platformTaskRepository.findById(taskId);
+
+    if (!task) {
+      throw new BadRequestException(TaskException.NotExisted);
+    }
+
+    return this.taskCommentRepository.find(query, taskId);
   }
 }
