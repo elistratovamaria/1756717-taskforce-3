@@ -4,6 +4,7 @@ import { TaskCategoryModule } from './task-category/task-category.module';
 import { PlatformTaskModule } from './platform-task/platform-task.module';
 import { TaskCommentModule } from './task-comment/task-comment.module';
 import { TaskResponseModule } from './task-response/task-response.module';
+import { ConfigTasksModule } from '@project/config/config-tasks';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { TaskResponseModule } from './task-response/task-response.module';
     PlatformTaskModule,
     TaskCommentModule,
     TaskResponseModule,
+    ConfigTasksModule
   ],
   controllers: [],
   providers: [],

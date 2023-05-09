@@ -18,6 +18,7 @@
       "@project/config/config-notify": [
         "libs/config/config-notify/src/index.ts"
       ],
+      "@project/config/config-tasks": ["libs/config/config-tasks/src/index.ts"],
       "@project/config/config-uploader": [
         "libs/config/config-uploader/src/index.ts"
       ],

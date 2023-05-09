@@ -3,8 +3,8 @@ POST http://localhost:3000/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Ivan",
-  "email": "ivan@gmail.com",
+  "name": "Marina",
+  "email": "marina@gmail.com",
   "city": "Vladivostok",
   "password": "123456",
   "role": "Executor",
@@ -18,20 +18,20 @@ POST http://localhost:3000/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "vasya@gmail.com",
+  "email": "marina@gmail.com",
   "password": "123456"
 }
 
 ###
 
 # Subscribe
-POST http://localhost:3000/api/auth/subscription/645906d80634aef7c9b1e53e HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDU5MDZkODA2MzRhZWY3YzliMWU1M2UiLCJlbWFpbCI6InZhc3lhQGdtYWlsLmNvbSIsInJvbGUiOiJFeGVjdXRvciIsIm5hbWUiOiJWYXN5YSIsImlhdCI6MTY4MzU1Nzk4OCwiZXhwIjoxNjgzNTU4NTg4fQ.kGI43jlzUA8uoNCd147Pa4U7re96bYcgCiaOqM8xueg
+POST http://localhost:3000/api/auth/subscription/645aa255466f9568ca35b9a5 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDVhYTI1NTQ2NmY5NTY4Y2EzNWI5YTUiLCJlbWFpbCI6Im1hcmluYUBnbWFpbC5jb20iLCJyb2xlIjoiRXhlY3V0b3IiLCJuYW1lIjoiTWFyaW5hIiwiaWF0IjoxNjgzNjYyNjY3LCJleHAiOjE2ODM2NjMyNjd9.6QvXxA1B865z_Xsv9yVJs09_mtKT1ubQ5DGmDFcmeBA
 
 ###
 
 # Get user by ID
-GET http://localhost:3000/api/auth/6452cfa2842af6046a0470b8 HTTP/1.1
+GET http://localhost:3000/api/auth/6452ca1f33bbee8ea383010e HTTP/1.1
 
 ###
 

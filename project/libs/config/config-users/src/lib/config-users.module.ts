@@ -5,7 +5,7 @@ import dbConfig from './config/db.config';
 import jwtConfig from './config/jwt.config';
 import rabbitConfig from './config/rabbit.config';
 
-const ENV_USERS_FILE_PATH = 'apps/users/users.dev.env';
+const ENV_USERS_FILE_PATH = 'apps/users/.users.dev.env';
 
 @Module({
   imports: [

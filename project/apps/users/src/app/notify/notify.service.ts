@@ -20,4 +20,12 @@ export class NotifyService {
       { ...dto }
     );
   }
+
+  public async sendUserId(id: string) {
+    return this.rabbitClient.publish<string>(
+      this.rabbitOptions.exchange,
+      RabbitRouting.SendUserId,
+      id
+    );
+  }
 }

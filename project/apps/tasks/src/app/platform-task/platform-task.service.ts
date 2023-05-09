@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { StatusTask, UserRole } from '@project/shared/shared-types';
+import { BadRequestException, ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { RabbitRouting, StatusTask, UserRole } from '@project/shared/shared-types';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task } from '@project/shared/shared-types';
 import { PlatformTaskRepository } from './platform-task.repository';
@@ -15,14 +15,24 @@ import { sortByStatus } from '@project/util/util-core';
 import { CreateCommentDto } from '../task-comment/dto/create-comment.dto';
 import { TaskCommentEntity } from '../task-comment/task-comment.entity';
 import { TaskCommentQuery } from '../task-comment/query/task-comment.query';
+import { CreateResponseDto } from './dto/create-response.dto';
+import { TaskResponseRepository } from '../task-response/task-response.repository';
+import { TaskResponseEntity } from '../task-response/task-response.entity';
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
+import { rabbitConfig } from '@project/config/config-tasks';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class PlatformTaskService {
   constructor(
+    private readonly rabbitClient: AmqpConnection,
+    @Inject(rabbitConfig.KEY)
+    private readonly rabbitOptions: ConfigType<typeof rabbitConfig>,
     private readonly platformTaskRepository: PlatformTaskRepository,
     private readonly taskCommentRepository: TaskCommentRepository,
     private readonly jwtService: JwtService,
-    private readonly taskReplyService: TaskReplyService
+    private readonly taskReplyService: TaskReplyService,
+    private readonly taskResponseRepository: TaskResponseRepository
   ) { }
 
   public async createTask(dto: CreateTaskDto, token?: string): Promise<Task> {
@@ -245,5 +255,50 @@ export class PlatformTaskService {
     }
 
     return this.taskCommentRepository.find(query, taskId);
+  }
+
+  public async createResponse(dto: CreateResponseDto, userId: string, taskId: number, token?: string) {
+    const user = this.jwtService.decode(token);
+    const task = await this.platformTaskRepository.findById(taskId);
+    const existedResponse = await this.taskResponseRepository.findExisted(taskId, userId);
+
+    if (!user) {
+      throw new UnauthorizedException(TaskException.Unauthorized);
+    }
+
+    if (!task) {
+      throw new BadRequestException(TaskException.NotExisted);
+    }
+
+    if (!(task.status === StatusTask.Done)) {
+      throw new ForbiddenException(TaskException.Status);
+    }
+
+    if (task.executorId !== userId) {
+      throw new ForbiddenException(TaskException.Forbidden);
+    }
+
+    if (existedResponse) {
+      throw new BadRequestException(TaskException.ResponseExists);
+    }
+
+    const response = { ...dto, userId, taskId }
+    const responseEntity = new TaskResponseEntity(response);
+
+    return this.taskResponseRepository
+      .create(responseEntity);
+  }
+
+  public async countRating(userId: string) {
+    const estimationsSum = await this.taskResponseRepository.countEstimation(userId);
+    const responsesAmount = await this.taskResponseRepository.countResponses(userId);
+    const failedTasksAmount = await this.platformTaskRepository.countExecutorFailedTasks(userId);
+    const rating = Math.ceil((estimationsSum / (responsesAmount + failedTasksAmount)));
+
+    return this.rabbitClient.publish<number>(
+      this.rabbitOptions.exchange,
+      RabbitRouting.GetAdditionalInfo,
+      rating
+    );
   }
 }

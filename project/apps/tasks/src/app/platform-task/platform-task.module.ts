@@ -6,12 +6,20 @@ import { TaskCategoryModule } from '../task-category/task-category.module';
 import { TaskCommentModule } from '../task-comment/task-comment.module';
 import { JwtService } from '@nestjs/jwt';
 import { TaskReplyModule } from '../task-reply/task-reply.module';
+import { TaskResponseModule } from '../task-response/task-response.module';
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import { getRabbitMQOptions } from '@project/util/util-core';
 
 @Module({
   imports: [
     TaskCategoryModule,
     TaskCommentModule,
-    TaskReplyModule
+    TaskReplyModule,
+    TaskResponseModule,
+    RabbitMQModule.forRootAsync(
+      RabbitMQModule,
+      getRabbitMQOptions('rabbit')
+    )
   ],
   controllers: [PlatformTaskController],
   providers: [PlatformTaskService, PlatformTaskRepository, JwtService],

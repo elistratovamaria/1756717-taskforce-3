@@ -10,6 +10,8 @@ import { NotifyModule } from '../notify/notify.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { RefreshTokenModule } from '../refresh-token/refresh-token.module';
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import { getRabbitMQOptions } from '@project/util/util-core';
 
 @Module({
   imports: [
@@ -18,6 +20,10 @@ import { RefreshTokenModule } from '../refresh-token/refresh-token.module';
       inject: [ConfigService],
       useFactory: getJwtOptions
     }),
+    RabbitMQModule.forRootAsync(
+      RabbitMQModule,
+      getRabbitMQOptions('rabbit')
+    ),
     NotifyModule,
     RefreshTokenModule,
   ],

@@ -11,6 +11,10 @@ import { TaskInListRdo } from './rdo/task-in-list.rdo';
 import { TaskCommentRdo } from '../task-comment/rdo/task-comment.rdo';
 import { CreateCommentDto } from '../task-comment/dto/create-comment.dto';
 import { TaskCommentQuery } from '../task-comment/query/task-comment.query';
+import { ResponseRdo } from './rdo/response.rdo';
+import { CreateResponseDto } from './dto/create-response.dto';
+import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { RabbitRouting } from '@project/shared/shared-types';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -225,5 +229,31 @@ export class PlatformTaskController {
   async showComments(@Query() query: TaskCommentQuery, @Param('taskId') taskId: number) {
     const comments = await this.taskService.getComments(query, taskId);
     return fillObject(TaskCommentRdo, comments);
+  }
+
+  @ApiResponse({
+    type: ResponseRdo,
+    status: HttpStatus.CREATED,
+    description: 'The new response has been successfully created'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have enough rights to add a response'
+  })
+  @Post(':taskId/:userId/response')
+  public async createResponse(@Body() dto: CreateResponseDto, @Param('taskId') taskId: number, @Param('userId') userId: string, @Headers('authorization') authorization?: string) {
+    const token = authorization?.split(' ')[1];
+    const newResponse = await this.taskService.createResponse(dto, userId, taskId, token);
+    return fillObject(ResponseRdo, newResponse);
+  }
+
+  @RabbitSubscribe({
+    exchange: 'taskforce.notify',
+    routingKey: RabbitRouting.SendUserId,
+    queue: 'taskforce.notify',
+  })
+  @Post()
+  public async updateAdditionalInfo(@Param('userId') userId: string) {
+    return await this.taskService.countRating(userId);
   }
 }

@@ -43,12 +43,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhM
 # Change task status
 PATCH http://localhost:3333/api/tasks/9/status HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ZhMjg0MmFmNjA0NmEwNDcwYjgiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwicm9sZSI6IkN1c3RvbWVyIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE2ODM1MjIxNDAsImV4cCI6MTY4MzUyMjc0MH0.P77soCKSQhy5U3PSchmDEzL_MKFOTQAbl5x6paSfQ5M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDUyY2ExZjMzYmJlZThlYTM4MzAxMGUiLCJlbWFpbCI6Im1hcnlAZ21haWwuY29tIiwicm9sZSI6IkV4ZWN1dG9yIiwibmFtZSI6Ik1hcnkiLCJpYXQiOjE2ODM2NTg0MTcsImV4cCI6MTY4MzY1OTAxN30.BmOxTXY6ISjnYTFgvGOhBa3xYhTNVdQiGPU9fxgNALI
 
 
 {
-  "status": "inprogress",
-  "executorId": "6452ca1f33bbee8ea383010e"
+  "status": "failed"
 }
 
 ###

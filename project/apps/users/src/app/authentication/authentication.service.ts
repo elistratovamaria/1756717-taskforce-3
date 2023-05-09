@@ -84,7 +84,8 @@ export class AuthenticationService {
     return this.platformUserRepository.findById(user['sub']);
   }
 
-  public async getUser(id: string) {
+  public async getUser(id: string, rating?: number) {
+    await this.updateAdditionalInfo(id, rating);
     return this.platformUserRepository.findById(id);
   }
 
@@ -100,7 +101,7 @@ export class AuthenticationService {
     }
 
     const userEntity = new PlatformUserEntity({ ...user, ...dto });
-    return this.platformUserRepository.update(id, userEntity);
+    return await this.platformUserRepository.update(id, userEntity);
   }
 
   async changePassword(dto: ChangePasswordDto, id: string) {
@@ -128,5 +129,15 @@ export class AuthenticationService {
         expiresIn: this.jwtOptions.refreshTokenExpiresIn
       })
     }
+  }
+
+  public async updateAdditionalInfo(id: string, rating: number) {
+    const user = await this.platformUserRepository.findById(id);
+    if (!user) {
+      throw new NotFoundException(AuthException.NotFound);
+    }
+
+    const userEntity = new PlatformUserEntity({ ...user, rating });
+    return await this.platformUserRepository.update(id, userEntity);
   }
 }

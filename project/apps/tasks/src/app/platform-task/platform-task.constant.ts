@@ -26,6 +26,18 @@ export const enum TaskSetting {
   TagMaxLength = 10,
 }
 
+export const enum TaskResponseValidationMessage {
+  MessageNotValid = 'Message should be from 50 to 500 symbols',
+  EstimationNotValid = 'Estimation should be a number from 1 to 5'
+}
+
+export const enum TaskResponseSetting {
+  MessageMinLength = 50,
+  MessageMaxLength = 500,
+  EstimationMinValue = 1,
+  EstimationMaxValue = 5,
+}
+
 export const DEFAULT_TASK_COUNT_LIMIT = 25;
 export const DEFAULT_SORT_DIRECTION = 'desc';
 export const DEFAULT_SORT_TYPE = SortType.CreatedAt;
@@ -39,5 +51,8 @@ export const enum TaskException {
   TaskNotNew = 'The reply can be made only for the task with status NEW',
   NotExecutorReply = 'This executor did not put the reply for this task',
   NotChooseExecutor = 'To set status to inProgress the user should choose the executor',
-  ExecutorBusy = 'The executor has tasks in work and cannot be chosen'
+  ExecutorBusy = 'The executor has tasks in work and cannot be chosen',
+  ResponseForbidden = 'You can make a response only for those executors who have done your task',
+  ResponseExists = 'The response on this task already exists',
+  Status = 'Responses could be created only for tasks with done status'
 }

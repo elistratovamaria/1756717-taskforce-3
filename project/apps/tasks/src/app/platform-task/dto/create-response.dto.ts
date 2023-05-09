@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Length, IsInt, Min, Max } from 'class-validator';
-import { TaskResponseValidationMessage, TaskResponseSetting } from '../task-response.constant';
+import { TaskResponseSetting, TaskResponseValidationMessage } from '../platform-task.constant';
 
 export class CreateResponseDto {
   @ApiProperty({

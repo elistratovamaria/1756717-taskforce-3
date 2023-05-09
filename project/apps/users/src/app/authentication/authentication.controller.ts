@@ -9,13 +9,14 @@ import { ExecutorRdo } from './rdo/executor.rdo';
 import { CustomerRdo } from './rdo/customer.rdo';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { MongoidValidationPipe } from '@project/shared/shared-pipes';
-import { UserRole } from '@project/shared/shared-types';
+import { RabbitRouting, UserRole } from '@project/shared/shared-types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { NotifyService } from '../notify/notify.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RequestWithUser } from '@project/shared/shared-types';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -88,9 +89,15 @@ export class AuthenticationController {
     status: HttpStatus.NOT_FOUND,
     description: 'The user with this id does not exist'
   })
+  @RabbitSubscribe({
+    exchange: 'taskforce.notify',
+    routingKey: RabbitRouting.GetAdditionalInfo,
+    queue: 'taskforce.notify',
+  })
   @Get(':id')
-  public async show(@Param('id', MongoidValidationPipe) id: string) {
-    const existUser = await this.authService.getUser(id);
+  public async show(@Param('id', MongoidValidationPipe) id: string, rating: number) {
+    await this.notifyService.sendUserId(id);
+    const existUser = await this.authService.getUser(id, rating);
     return existUser.role === UserRole.Customer ? fillObject(CustomerRdo, existUser) : fillObject(ExecutorRdo, existUser);
   }
 
