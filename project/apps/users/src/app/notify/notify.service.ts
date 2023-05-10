@@ -21,11 +21,11 @@ export class NotifyService {
     );
   }
 
-  public async sendUserId(id: string) {
-    return this.rabbitClient.publish<string>(
+  public async sendUserId(userId: string) {
+    return this.rabbitClient.publish(
       this.rabbitOptions.exchange,
       RabbitRouting.SendUserId,
-      id
+      userId
     );
   }
 }

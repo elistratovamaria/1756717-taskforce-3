@@ -15,6 +15,7 @@ import { ResponseRdo } from './rdo/response.rdo';
 import { CreateResponseDto } from './dto/create-response.dto';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { RabbitRouting } from '@project/shared/shared-types';
+import { AdditionalInfoDto } from './dto/additional-info.dto';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -253,7 +254,7 @@ export class PlatformTaskController {
     queue: 'taskforce.notify',
   })
   @Post()
-  public async updateAdditionalInfo(@Param('userId') userId: string) {
-    return await this.taskService.countRating(userId);
+  public async updateAdditionalInfo(userId: string) {
+    await this.taskService.countRating(userId);
   }
 }

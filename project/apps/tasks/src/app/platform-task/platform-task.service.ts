@@ -21,6 +21,7 @@ import { TaskResponseEntity } from '../task-response/task-response.entity';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { rabbitConfig } from '@project/config/config-tasks';
 import { ConfigType } from '@nestjs/config';
+import { AdditionalInfoDto } from './dto/additional-info.dto';
 
 @Injectable()
 export class PlatformTaskService {
@@ -295,10 +296,10 @@ export class PlatformTaskService {
     const failedTasksAmount = await this.platformTaskRepository.countExecutorFailedTasks(userId);
     const rating = Math.ceil((estimationsSum / (responsesAmount + failedTasksAmount)));
 
-    return this.rabbitClient.publish<number>(
+    return this.rabbitClient.publish(
       this.rabbitOptions.exchange,
       RabbitRouting.GetAdditionalInfo,
-      rating
+      {userId, rating}
     );
   }
 }

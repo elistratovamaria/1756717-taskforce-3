@@ -7,13 +7,15 @@ import { ConfigService, ConfigType } from '@nestjs/config';
 import dayjs from 'dayjs';
 import { AuthException } from './authentication.constant';
 import { PlatformUserEntity } from '../platform-user/platform-user.entity';
-import { User, UserRole } from '@project/shared/shared-types';
+import { RabbitRouting, User, UserRole } from '@project/shared/shared-types';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConfig } from '@project/config/config-users';
 import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 import { createJWTPayload } from '@project/util/util-core';
 import * as crypto from 'node:crypto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { AdditionalInfoDto } from './dto/additional-info.dto';
+import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 
 @Injectable()
 export class AuthenticationService {
@@ -84,8 +86,7 @@ export class AuthenticationService {
     return this.platformUserRepository.findById(user['sub']);
   }
 
-  public async getUser(id: string, rating?: number) {
-    await this.updateAdditionalInfo(id, rating);
+  public async getUser(id: string) {
     return this.platformUserRepository.findById(id);
   }
 
@@ -131,13 +132,14 @@ export class AuthenticationService {
     }
   }
 
-  public async updateAdditionalInfo(id: string, rating: number) {
-    const user = await this.platformUserRepository.findById(id);
+  public async updateAdditionalInfo(dto: AdditionalInfoDto) {
+    const {userId, rating} = dto;
+    const user = await this.platformUserRepository.findById(userId);
     if (!user) {
       throw new NotFoundException(AuthException.NotFound);
     }
 
     const userEntity = new PlatformUserEntity({ ...user, rating });
-    return await this.platformUserRepository.update(id, userEntity);
+    return await this.platformUserRepository.update(userId, userEntity);
   }
 }

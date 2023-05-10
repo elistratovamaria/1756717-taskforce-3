@@ -17,6 +17,7 @@ import { RequestWithUser } from '@project/shared/shared-types';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { AdditionalInfoDto } from './dto/additional-info.dto';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -89,16 +90,22 @@ export class AuthenticationController {
     status: HttpStatus.NOT_FOUND,
     description: 'The user with this id does not exist'
   })
+  @Get(':id')
+  public async show(@Param('id', MongoidValidationPipe) userId: string) {
+    await this.updateAdditionalInfo(userId);
+    const existUser = await this.authService.getUser(userId);
+    return existUser.role === UserRole.Customer ? fillObject(CustomerRdo, existUser) : fillObject(ExecutorRdo, existUser);
+  }
+
   @RabbitSubscribe({
     exchange: 'taskforce.notify',
     routingKey: RabbitRouting.GetAdditionalInfo,
     queue: 'taskforce.notify',
   })
-  @Get(':id')
-  public async show(@Param('id', MongoidValidationPipe) id: string, rating: number) {
-    await this.notifyService.sendUserId(id);
-    const existUser = await this.authService.getUser(id, rating);
-    return existUser.role === UserRole.Customer ? fillObject(CustomerRdo, existUser) : fillObject(ExecutorRdo, existUser);
+  @Post()
+  public async updateAdditionalInfo(userId: string, dto?: AdditionalInfoDto) {
+    await this.notifyService.sendUserId(userId);
+    await this.authService.updateAdditionalInfo(dto);
   }
 
   @UseGuards(JwtAuthGuard)
