@@ -1,5 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import * as Joi from 'joi';
+import { Environment } from '@project/shared/shared-types';
 
 const DEFAULT_PORT = 3000;
 const DEFAULT_MONGO_PORT = 27017;
@@ -65,7 +66,7 @@ export default registerAs('application', (): NotifyConfig => {
 
   const validationSchema = Joi.object<NotifyConfig>({
     environment: Joi.string()
-      .valid('development', 'production', 'stage'),
+      .valid(Environment.Development, Environment.Production, Environment.Stage),
     port: Joi.number()
       .port()
       .default(DEFAULT_PORT),

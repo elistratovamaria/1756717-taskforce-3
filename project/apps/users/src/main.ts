@@ -20,16 +20,12 @@ async function bootstrap() {
     .build();
 
   const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-
   const configService = app.get(ConfigService);
-
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('spec', app, document);
-
-  app.useGlobalPipes(new ValidationPipe());
-
   const port = configService.get('application.port');
+  app.setGlobalPrefix(globalPrefix);
+  SwaggerModule.setup('spec', app, document);
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(port);
   Logger.log(
     `🚀 Current mode: ${configService.get('application.environment')}`

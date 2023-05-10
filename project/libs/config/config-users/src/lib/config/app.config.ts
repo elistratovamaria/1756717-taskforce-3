@@ -1,5 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import * as Joi from 'joi';
+import { Environment } from '@project/shared/shared-types';
 
 const DEFAULT_PORT = 3000;
 
@@ -15,7 +16,7 @@ export default registerAs('application', (): ApplicationConfig => {
   };
 
   const validationSchema = Joi.object<ApplicationConfig>({
-    environment: Joi.string().valid('development', 'production', 'stage').required(),
+    environment: Joi.string().valid(Environment.Development, Environment.Production, Environment.Stage).required(),
     port: Joi.number().port().default(DEFAULT_PORT),
   });
 
